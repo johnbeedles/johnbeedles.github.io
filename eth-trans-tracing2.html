@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ethereum Transaction Tracing - Multi-Step Transaction | John Beedles</title>
+
+    <!-- Modular CSS -->
+    <link rel="stylesheet" href="core.css">
+    <link rel="stylesheet" href="components.css">
+    <link rel="stylesheet" href="pages.css">
+</head>
+
+<script>
+    document.querySelectorAll('.expert-toggle').forEach(toggle => { 
+        toggle.addEventListener('click', () => { 
+            const panel = toggle.nextElementSibling; panel.classList.toggle('open'); 
+        }); 
+    });
+</script>
+
+<body>
+    
+    <div class="mobile-warning">
+        This site has not been optimised for mobile devices — best viewed on desktop or tablet
+    </div>
+    
+    <div class="site-wrapper">
+    
+        <!-- Header -->
+        <header class="site-header">
+            <div class="container header-container">
+                <div class="logo">
+                    <span class="logo-mark">JB</span>
+                    <span class="logo-text">John Beedles</span>
+                </div>
+                <nav class="nav">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="cv.html" class="nav-link">CV</a>
+                    <a href="portfolio.html" class="nav-link active">Portfolio</a>
+                    <a href="#contact" class="nav-link">Contact</a>
+                </nav>
+            </div>
+        </header>
+    
+        <main>
+    
+        <!-- Hero -->
+        <section class="hero">
+            <div class="container hero-container">
+                <div class="hero-content">
+                    <h1 class="hero-title">
+                        Ethereum Transaction Tracing<br>
+                        <span class="hero-highlight">Multi-Step Transaction</span>
+                    </h1>
+    
+                    <p class="hero-subtitle">
+                        In this project, I trace a complex Ethereum transaction involving multiple swaps on Uniswap V3 and Balancer, breaking down the flow, fees, and net results as a crypto‑native support engineer.
+                    </p>
+    
+                    <div class="hero-actions">
+                        <a href="portfolio.html" class="btn btn-primary">My Portfolio</a>
+                    </div>
+    
+                    <div class="hero-meta">
+                        <span>On‑chain Analysis</span>
+                        <span>Multi-Protocol Swaps</span>
+                        <span>Advanced Tracing</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    
+        <!-- Project Overview -->
+        <section class="section">
+            <div class="container two-column">
+    
+                <!-- LEFT -->
+                <div>
+                    <h2>Project Overview</h2>
+                    <p class="section-intro">
+                        I selected a complex multi-hop token swap to demonstrate advanced transaction tracing, including contract calls, liquidity pools, and profit calculation, without oversimplifying the DeFi mechanics.
+                    </p>
+    
+                    <h3>What This Project Demonstrates</h3>
+                    <ul class="bullet-list">
+                        <li>How to trace multi-hop swaps</li>
+                        <li>How to analyze internal transactions</li>
+                        <li>How to interpret liquidity pool interactions</li>
+                        <li>How to calculate net profits and fees</li>
+                        <li>How to explain complex DeFi transactions</li>
+                    </ul>
+                </div>
+    
+                <!-- RIGHT -->
+                <div class="card">
+                    <h3>Skills Demonstrated</h3>
+                    <ul class="bullet-list">
+                        <li>Advanced on‑chain analysis</li>
+                        <li>Multi-protocol interpretation (Uniswap, Balancer)</li>
+                        <li>Transaction flow diagramming</li>
+                        <li>Arbitrage detection</li>
+                        <li>Expert-level explanation</li>
+                    </ul>
+    
+                    <h3 style="margin-top:1.5rem;">Tools Used</h3>
+                    <ul class="bullet-list">
+                        <li>Etherscan</li>
+                        <li>Ethereum mainnet</li>
+                        <li>Web3 fundamentals</li>
+                    </ul>
+                </div>
+    
+            </div>
+        </section>
+    
+        <!-- Transaction Details -->
+        <section class="section">
+            <div class="container">
+                <h2>Transaction Details</h2>
+                <p class="section-intro">
+                    This transaction is an aggregated swap involving three token swaps across Balancer and Uniswap V3. No direct ETH transfer, but WETH is used as an intermediary.
+                </p>
+    
+                <div class="card">
+                    <h3>Key Data</h3>
+                    <ul class="bullet-list">
+                        <li><strong>Hash:</strong> 0xfdf027f88de3290e8493086abdf24b2b1316c3159be2b5ef06109784c81cbbc7</li>
+                        <li><strong>Status:</strong> Success</li>
+                        <li><strong>Block Number:</strong> 18872908 (5525644 confirmations)</li>
+                        <li><strong>Timestamp:</strong> Dec-26-2023 10:41:47 PM UTC (772 days ago)</li>
+                        <li><strong>From:</strong> 0xb338C6f6E591125491232075108F5cA2e9715143</li>
+                        <li><strong>To:</strong> 0x46fBF407d8b99b2F2e75dEddd242ED51c2e3A4a9</li>
+                        <li><strong>Value:</strong> 0 ETH ($0.00)</li>
+                        <li><strong>Transaction Fee:</strong> 0.004818719811652432 ETH ($9.52)</li>
+                        <li><strong>Gas Price:</strong> 19.763107043 Gwei</li>
+                        <li><strong>Gas Used:</strong> 243,824</li>
+                        <li><strong>Gas Limit:</strong> 365,736 (66.67% used)</li>
+                        <li><strong>Nonce:</strong> 184</li>
+                        <li><strong>Position in Block:</strong> 10</li>
+                        <li><strong>Transaction Type:</strong> 2 (EIP-1559)</li>
+                        <li><strong>Input Data Summary:</strong> Function call to 0x00024c13 with parameters including token addresses (RNG: 0x3b94440c8c4f69d5c9f47bab9c5a93064df460f5, BAL: 0xba100000625a3754423978a60c9317c58a424e3d), Uniswap V3 pools, and swap amounts.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    
+        <!-- Step-by-Step Process -->
+        <section class="section">
+            <div class="container">
+                <h2>My Step‑by‑Step Process</h2>
+                <p class="section-intro">
+                    I began by opening the transaction on Etherscan. My goal was to understand the transaction from end to end — 
+                    not just what happened, but why it happened and what each field tells me about the behaviour of the network, including multi-hop swaps and contract interactions.
+                </p>
+    
+                <div class="card">
+                    <div class="step-flow">
+    
+                        <!-- Step 1 -->
+                        <div class="step-flow-item">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4>Identifying the Sender and Receiver</h4>
+                                <p>
+                                    The From address is the wallet that initiated the transaction. The To address is the swap aggregator contract. 
+                                    This is a complex swap between externally owned accounts and multiple contracts, involving internal transactions.
+                                </p>
+                            </div>
+                        </div>
+    
+                        <!-- Step 2 -->
+                        <div class="step-flow-item">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4>Understanding the Value Sent</h4>
+                                <p>
+                                    No direct ETH transferred (0 ETH value), but WETH is used in swaps. The transaction involves token exchanges resulting in a small net profit.
+                                </p>
+                            </div>
+                        </div>
+    
+                        <!-- Step 3 -->
+                        <div class="step-flow-item">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h4>Breaking Down the Gas Fee</h4>
+                                <p>
+                                    Gas Used: 243,824<br>
+                                    Gas Price: 19.763107043 Gwei<br>
+                                    Fee Paid: 0.004818719811652432 ETH (~$9.52)
+                                </p>
+    
+                                <div class="expert-toggle">Advanced Details ▸</div>
+                                <div class="expert-panel">
+                                    <ul class="bullet-list">
+                                        <li>Moderate gas price indicates typical network congestion</li>
+                                        <li>243,824 gas reflects multiple contract calls</li>
+                                        <li>Fee confirms inclusion in block despite complexity</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <!-- Step 4 -->
+                        <div class="step-flow-item">
+                            <div class="step-number">4</div>
+                            <div class="step-content">
+                                <h4>Checking Block Inclusion</h4>
+                                <p>
+                                    The transaction was included in block <strong>18872908</strong> and confirmed quickly. 
+                                    This tells me the gas price chosen was appropriate for the network conditions at the time.
+                                </p>
+                            </div>
+                        </div>
+    
+                        <!-- Step 5 -->
+                        <div class="step-flow-item">
+                            <div class="step-number">5</div>
+                            <div class="step-content">
+                                <h4>Reviewing Logs and Internal Transactions</h4>
+                                <p>
+                                    This transaction has 15 internal transactions (approvals, calls) and event logs from swaps. 
+                                    These reveal the multi-hop path: WETH → RNG → BAL → WETH.
+                                </p>
+                            </div>
+                        </div>
+    
+                        <!-- Step 6 -->
+                        <div class="step-flow-item">
+                            <div class="step-number">6</div>
+                            <div class="step-content">
+                                <h4>Summarising the Transaction</h4>
+                                <p>
+                                    In plain English: a wallet executed a multi-hop swap via an aggregator, trading WETH for RNG, then BAL, then back to WETH, 
+                                    netting ~0.0048 WETH profit after fees. Likely an arbitrage opportunity.
+                                </p>
+                            </div>
+                        </div>
+    
+                    </div>
+                </div>
+    
+            </div>
+        </section>
+
+        <!-- Transaction Flow -->
+        <section class="section">
+            <div class="container">
+                <h2>Transaction Flow</h2>
+                <p class="section-intro">
+                    This transaction is an aggregated swap involving three token swaps across Balancer and Uniswap V3. It appears to be a multi-hop arbitrage or DeFi optimization swap: WETH → RNG → BAL → WETH, resulting in a small profit.
+                </p>
+
+                <div class="card">
+                    <h3>Step-by-Step Trace</h3>
+                    <ol class="bullet-list">
+                        <li><strong>Initiation:</strong> Transaction sent from 0xb338C6f6... to 0x46fBF407... (swap aggregator contract).</li>
+                        <li><strong>Swap 1: ETH → RNG on Uniswap V3</strong><br>Pool: Uniswap V3 RNG/ETH (0x9437ad40056ca3ec2fc1efe41885ad4b6ac46061)<br>Swap 0.433489443 WETH (~$856.60) for 193,380.02 RNG.</li>
+                        <li><strong>Swap 2: RNG → BAL on Uniswap V3</strong><br>Pool: Uniswap V3 RNG-BAL (0xc6501642f183085f8343d3907ee9f0327b8fb4bf)<br>Swap 193,380.02 RNG for 218.05 BAL (~$36.92).</li>
+                        <li><strong>Swap 3: BAL → ETH on Balancer</strong><br>Pool: Balancer ETH/BAL 50/50 #5 (0xe867be952ee17d2d294f2de62b13b9f4af521e9a)<br>Swap 218.05 BAL for 0.43832215 WETH (~$865.82).</li>
+                        <li><strong>Final Settlement:</strong> Ends with 0.43832215 WETH (~$866.15) in wallet. Net profit: ~$9.55 in ETH value after fees.</li>
+                    </ol>
+
+                    <h3>Simple Flow Diagram (Text-Based)</h3>
+                    <pre>
+User Wallet (0xb338...) → Aggregator (0x46fBF...)
+    |
+    |--- Swap 1: WETH → RNG (Uniswap V3 Pool: 0x9437...)
+    |       Amount: 0.433489443 WETH → 193,380.02 RNG
+    |
+    |--- Swap 2: RNG → BAL (Uniswap V3 Pool: 0xc650...)
+    |       Amount: 193,380.02 RNG → 218.05 BAL
+    |
+    |--- Swap 3: BAL → WETH (Balancer Pool: 0xe867...)
+    |       Amount: 218.05 BAL → 0.43832215 WETH
+    |
+    Final: +0.004828 WETH profit back to User
+                    </pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- Token Transfers -->
+        <section class="section">
+            <div class="container">
+                <h2>Token Transfers</h2>
+                <div class="card">
+                    <ul class="bullet-list">
+                        <li><strong>BAL</strong> from Uniswap V3 RNG-BAL (0xc650...) to 0x46fBF407...: 218.04613230165010628 BAL ($36.92)</li>
+                        <li><strong>BAL</strong> from 0x46fBF407... to Balancer Pool (0xe867...): 218.04613230165010628 BAL ($36.92)</li>
+                        <li><strong>WETH</strong> from Balancer Pool (0xe867...) to 0x46fBF407...: 0.438322150289040501 WETH ($865.82)</li>
+                        <li><strong>RNG</strong> from Uniswap V3 RNG (0x9437...) to Uniswap V3 RNG-BAL (0xc650...): 193,380.016474958766014464 RNG (—)</li>
+                        <li><strong>WETH</strong> from 0x46fBF407... to Uniswap V3 RNG (0x9437...): 0.433493786313103616 WETH ($856.28)</li>
+                        <li><strong>WETH</strong> from 0x46fBF407... to 0x46fBF407... (self): 0.004828363975936885 WETH ($9.54)</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Additional Notes -->
+        <section class="section">
+            <div class="container">
+                <h2>Additional Notes</h2>
+                <div class="card">
+                    <ul class="bullet-list">
+                        <li>Protocols Involved: Balancer (BAL → WETH) and Uniswap V3 (WETH → RNG, RNG → BAL).</li>
+                        <li>15 zero-value internal transactions (approvals, calls, etc.).</li>
+                        <li>MEV flagged – possibly arbitrage-optimized.</li>
+                        <li>Net Result: +0.004828 WETH (~$9.54) profit after $9.52 gas fee.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    
+        </main>
+    
+        <!-- Contact -->
+        <section id="contact" class="section section-alt">
+            <div class="container two-column">
+                <div>
+                    <h2>Let’s Talk</h2>
+                    <p class="section-intro">
+                        I’m open to roles in SaaS, fintech and Web3 support—particularly where reliability,
+                        observability, and customer impact are central.
+                    </p>
+                </div>
+                <div class="contact-block">
+                    <p><strong>Email:</strong> <a href="mailto:johnbeedles@gmail.com">johnbeedles@gmail.com</a></p>
+                    <p><strong>Location:</strong> Bournemouth, United Kingdom</p>
+                    <p><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/john-beedles-a428b3139" target="_blank">View Profile</a></p>
+                </div>
+            </div>
+        </section>
+    
+        <footer class="site-footer">
+            <div class="container footer-container">
+                <p>© <span id="year"></span> John Beedles. All rights reserved.</p>
+            </div>
+        </footer>
+    
+    </div>
+    
+    <!-- Advanced Details Script -->
+    <script>
+    document.querySelectorAll('.expert-toggle').forEach(toggle => {
+        toggle.addEventListener('click', () => {
+            const panel = toggle.nextElementSibling;
+            panel.classList.toggle('open');
+        });
+    });
+    </script>
+    
+</body>
+</html>

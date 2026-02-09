@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio | John Beedles</title>
+
+    <!-- Modular CSS -->
+    <link rel="stylesheet" href="core.css">
+    <link rel="stylesheet" href="components.css">
+    <link rel="stylesheet" href="pages.css">
+</head>
+
+<body>
+
+<div class="mobile-warning">
+    This site has not been optimised for mobile devices — best viewed on desktop or tablet
+</div>
+    
+<div class="site-wrapper">
+
+    <!-- Header -->
+    <header class="site-header">
+        <div class="container header-container">
+            <div class="logo">
+                <span class="logo-mark">JB</span>
+                <span class="logo-text">John Beedles</span>
+            </div>
+            <nav class="nav">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="cv.html" class="nav-link">CV</a>
+                <a href="portfolio.html" class="nav-link active">Portfolio</a>
+                <a href="#contact" class="nav-link">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Shared Hero -->
+    <section class="hero">
+        <div class="container hero-container">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    Application Support Engineer<br>
+                    <span class="hero-highlight">SaaS • Fintech • Crypto</span>
+                </h1>
+                <p class="hero-subtitle">
+                    Senior Application Support Engineer with 18+ years of experience supporting, debugging, and optimising critical production systems across cloud,
+                    API, and enterprise environments. Strong background in SQL, scripting, observability, and incident management,
+                    with hands‑on crypto experience tracing Ethereum transactions, analysing on‑chain data, and understanding DeFi mechanics.
+                </p>
+                <p class="hero-subtitle">
+                    Extensive experience managing payment gateways, integrating with financial services, and ensuring data accuracy across high‑volume payment and refund workflows.
+                    Known for owning complex issues end‑to‑end, improving monitoring and tooling, and collaborating closely with engineering, product, and customer‑facing teams.
+                    Excited to bring deep support expertise to a crypto‑native, fast‑moving environment.
+                </p>
+                <div class="hero-actions">
+                    <a href="cv.html" class="btn btn-primary">View My CV</a>
+                </div>
+                <div class="hero-meta">
+                    <span>18+ years in production support</span>
+                    <span>Fintech · SaaS · Crypto</span>
+                    <span>Splunk · Dynatrace · Azure · APIs</span>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <main class="section">
+        <div class="container">
+    
+            <h1>Support Portfolio</h1>
+            <p class="section-intro">
+                A curated set of small, crypto-related support walkthroughs covering Ethereum transaction tracing and wallet operations with simple troubleshooting.
+            </p>
+    
+            <div class="grid grid-3">
+            
+                <!-- Ethereum Transaction Tracing (Beginner) -->
+                <a href="eth-trans-tracing.html" class="card">
+                    <h3>Ethereum Transaction Tracing - Basic Transaction</h3>
+                    <p>
+                        A beginner‑friendly walkthrough of tracing a real Ethereum transaction using Etherscan.
+                        A step‑by‑step walkthrough, analysing gas usage.
+                    </p>
+                </a>
+            
+                <!-- Ethereum Transaction Tracing – Advanced -->
+                <a href="eth-trans-tracing2.html" class="card">
+                    <h3>Ethereum Transaction Tracing - Multi-Step Transaction</h3>
+                    <p>
+                        A more indepth walkthrough of tracing a real Ethereum transaction using Etherscan. 
+                        A step‑by‑step walkthrough, decoding logs, analysing gas usage, and understanding internal calls.
+                    </p>
+                </a>
+
+                                        
+                <!-- Wallets -->
+                <a href="wallet-operations.html" class="card">
+                    <h3>Wallet Setup, Operations & Troubleshooting</h3>
+                    <p>
+                        My personal walkthrough guide covering setup of MetaMask, Ledger and Exodus wallets and how I use them.
+                        Simple, common user issues, seed phrase and recovery practices.
+                    </p>
+                </a>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="container">
+
+                <h1>Planned Projects</h1>
+                <p class="section-intro">
+                    Ideas for next projects, to be added over time. These will cover a range of crypto and non crypto themes.
+                </p>
+        
+                <div class="grid grid-3">
+        
+                    <!-- TBC Project -->
+                    <article class="card">
+                        <h3>My Crypto - On‑chain / Off‑chain</h3>
+                        <p>
+                            A guide to which exchanges I use, how to set up accounts and which ones I use to DCA.
+                            How and where I store my crypto and track my holdings on-chain and off-chain.
+                        </p>
+                    </article>
+        
+                    <!-- Other ideas -->
+                    <article class="card">
+                        <h3>None Crypto: API Monitoring Dashboard (Mock Design)</h3>
+                        <p>
+                            A conceptual monitoring dashboard for API latency, error rates, throughput, and alert thresholds — 
+                            demonstrating how I design observability for production services.
+                        </p>
+                    </article>
+                    
+                    <article class="card">
+                        <h3>None Crypto: Monitoring & Alerting Setup (Splunk + Dynatrace)</h3>
+                        <p>
+                            A detailed guide on designing and configuring monitoring and alerting for production services using 
+                            Splunk and Dynatrace — covering dashboards, thresholds, baselines, and operational readiness.
+                        </p>
+                    </article>
+                
+                </div>            
+        
+            </div>
+        </div>
+    </main>
+    
+
+    <!-- Contact -->
+    <section id="contact" class="section section-alt">
+        <div class="container two-column">
+            <div>
+                <h2>Let’s Talk</h2>
+                <p class="section-intro">
+                    I’m open to roles in SaaS, fintech and crypto/Web3 support—particularly where reliability,
+                    observability, and customer impact are central.
+                </p>
+            </div>
+            <div class="contact-block">
+                <p><strong>Email:</strong> <a href="mailto:johnbeedles@gmail.com">johnbeedles@gmail.com</a></p>
+                <p><strong>Location:</strong> Bournemouth, United Kingdom</p>
+                <p><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/john-beedles-a428b3139" target="_blank">View Profile</a></p>
+            </div>
+        </div>
+    </section>
+
+    <footer class="site-footer">
+        <div class="container footer-container">
+            <p>© <span id="year"></span> John Beedles. All rights reserved.</p>
+        </div>
+    </footer>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wallet Setup, Operations & Troubleshooting | John Beedles</title>
+
+    <!-- Modular CSS -->
+    <link rel="stylesheet" href="core.css">
+    <link rel="stylesheet" href="components.css">
+    <link rel="stylesheet" href="pages.css">
+</head>
+
+<script>
+    document.querySelectorAll('.expert-toggle').forEach(toggle => { 
+        toggle.addEventListener('click', () => { 
+            const panel = toggle.nextElementSibling; panel.classList.toggle('open'); 
+        }); 
+    });
+</script>
+
+<body>
+
+    <div class="mobile-warning">
+        This site has not been optimised for mobile devices — best viewed on desktop or tablet
+    </div>
+        
+    <div class="site-wrapper">
+    
+        <!-- Header -->
+        <header class="site-header">
+            <div class="container header-container">
+                <div class="logo">
+                    <span class="logo-mark">JB</span>
+                    <span class="logo-text">John Beedles</span>
+                </div>
+                <nav class="nav">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="cv.html" class="nav-link">CV</a>
+                    <a href="portfolio.html" class="nav-link active">Portfolio</a>
+                    <a href="#contact" class="nav-link">Contact</a>
+                </nav>
+            </div>
+        </header>
+    
+        <main>
+    
+        <!-- Hero -->
+        <section class="hero">
+            <div class="container hero-container">
+                <div class="hero-content">
+                    <h1 class="hero-title">
+                        Wallet Setup, Operations & Troubleshooting<br>
+                        <span class="hero-highlight">My Personal Walkthrough</span>
+                    </h1>
+    
+                    <p class="hero-subtitle">
+                        Here, I walk you through how I set up and manage my wallets like MetaMask, Ledger, and Exodus, 
+                        debug basic issues, prioritize security with seed phrases and recovery, and choose between hardware and browser-based wallets.
+                    </p>
+    
+                    <div class="hero-actions">
+                        <a href="portfolio.html" class="btn btn-primary">My Portfolio</a>
+                    </div>
+    
+                    <div class="hero-meta">
+                        <span>Web3 Support</span>
+                        <span>Wallet Troubleshooting</span>
+                        <span>RPC · Gas · Nonce Analysis</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    
+        <!-- Project Overview -->
+        <section class="section">
+            <div class="container two-column">
+    
+                <!-- LEFT -->
+                <div>
+                    <h2>Project Overview</h2>
+                    <p class="section-intro">
+                        In this walkthrough, I share my personal approach to wallet operations: from initial setup to troubleshooting.
+                        This reflects how I handle wallets in real Web3 environments.
+                    </p>
+    
+                    <h3>What This Walkthrough Covers</h3>
+                    <ul class="bullet-list">
+                        <li>How I set up my wallets: MetaMask, Ledger, and Exodus</li>
+                        <li>How I debug and resolve basic issues without complexity</li>
+                        <li>How I think about security, seed phrases, and safe recovery practices</li>
+                        <li>The differences between and how I use hardware devices and browser‑based wallets</li>
+                    </ul>
+                </div>
+    
+                <!-- RIGHT -->
+                <div class="card">
+                    <h3>Skills Demonstrated</h3>
+                    <ul class="bullet-list">
+                        <li>Web3 support & education</li>
+                        <li>Wallet troubleshooting</li>
+                        <li>RPC & network configuration</li>
+                        <li>Nonce & gas analysis</li>
+                        <li>Hardware wallet operations</li>
+                    </ul>
+    
+                    <h3 style="margin-top:1.5rem;">Tools & Context</h3>
+                    <ul class="bullet-list">
+                        <li>MetaMask, Ledger, Exodus</li>
+                        <li>Ethereum & EVM chains</li>
+                        <li>RPC endpoints & explorers</li>
+                        <li>Browser & OS environments</li>
+                    </ul>
+                </div>
+    
+            </div>
+        </section>
+    
+        <!-- How I Setup My Wallets -->
+        <section class="section">
+            <div class="container">
+                <h2>How I Set Up My Wallets: MetaMask, Ledger, and Exodus</h2>
+                <p class="section-intro">
+                    Let me walk you through how I set up each of my wallets step by step.
+                </p>
+    
+                <div class="card">
+                    <div class="step-flow">
+    
+                        <!-- MetaMask Setup -->
+                        <div class="step-flow-item">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4>Setting Up MetaMask</h4>
+                                <p>
+                                    I always start by going to the official site: metamask.io. I click "Download" and select my browser (usually Chrome or Firefox). 
+                                    I add the extension from the official store, confirming it's from Consensys. Once installed, I open MetaMask and choose "Create a new wallet". 
+                                    I set a strong, unique password. MetaMask generates a 12-word Secret Recovery Phrase—I write it down immediately on paper (never digitally), store it securely offline, 
+                                    and verify it by re-entering the words as prompted. I complete the setup and add Ethereum mainnet or any custom networks I need.
+                                </p>
+    
+                                <div class="expert-toggle">Advanced Details ▸</div>
+                                <div class="expert-panel">
+                                    <ul class="bullet-list">
+                                        <li>I use a dedicated browser profile for crypto to avoid extension conflicts.</li>
+                                        <li>I double-check the URL and extension source to avoid phishing.</li>
+                                        <li>I enable auto-lock after a short inactivity period.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <!-- Ledger Setup -->
+                        <div class="step-flow-item">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4>Setting Up Ledger</h4>
+                                <p>
+                                    I unbox my Ledger device (Nano X, S Plus, or similar) and connect it to my computer or phone via USB/Bluetooth. 
+                                    I download and install Ledger Live from ledger.com/start. In Ledger Live, I select "Set up as new device". 
+                                    The device prompts me to choose a 4-8 digit PIN—I set one that's secure but memorable. 
+                                    It then generates a 24-word recovery phrase on the device itself—I write it down carefully on the provided recovery sheet, verify each word, 
+                                    and confirm on the device. I update the firmware if prompted, then install the apps I need (e.g., Ethereum, Bitcoin) via Ledger Live.
+                                </p>
+    
+                                <div class="expert-toggle">Advanced Details ▸</div>
+                                <div class="expert-panel">
+                                    <ul class="bullet-list">
+                                        <li>I perform the genuine check in Ledger Live to ensure the device is authentic.</li>
+                                        <li>I never enter my recovery phrase on any computer or website.</li>
+                                        <li>I enable passphrase for extra security on high-value accounts if needed.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <!-- Exodus Setup -->
+                        <div class="step-flow-item">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h4>Setting Up Exodus</h4>
+                                <p>
+                                    I go to the official exodus.com/download and download the version for my platform (desktop or mobile). 
+                                    I install and launch Exodus. It opens directly to wallet creation—no sign-up needed. 
+                                    I immediately back up my 12-word seed phrase: I write it down offline, store it securely, and verify it in the app by re-entering the words. 
+                                    I set a strong password for the app. Then, I enable any assets I plan to use and test the interface.
+                                </p>
+    
+                                <div class="expert-toggle">Advanced Details ▸</div>
+                                <div class="expert-panel">
+                                    <ul class="bullet-list">
+                                        <li>I download only from the official site to avoid fakes.</li>
+                                        <li>I test a small receive/send to confirm everything works.</li>
+                                        <li>I keep the app updated for security patches.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+    
+                    </div>
+                </div>
+            </div>
+        </section>
+    
+        <!-- How I Debug and Resolve Basic Issues -->
+        <section class="section">
+            <div class="container">
+                <h2>How I Debug and Resolve Basic Issues</h2>
+                <p class="section-intro">
+                    When something goes wrong, I follow these steps to try to fix them.
+                </p>
+    
+                <div class="card">
+                    <div class="step-flow">
+    
+                        <!-- Step 1 -->
+                        <div class="step-flow-item">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4>Checking for Stuck Transactions</h4>
+                                <p>
+                                    I open the block explorer, paste the transaction hash, and check its status. If it's pending, I look at the gas price and compare it to current network fees.
+                                </p>
+    
+                                <div class="expert-toggle">Advanced Details ▸</div>
+                                <div class="expert-panel">
+                                    <ul class="bullet-list">
+                                        <li>If gas is too low, I speed it up by resending with higher fees.</li>
+                                        <li>For nonces out of order, I send a cancel transaction to myself.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <!-- Step 2 -->
+                        <div class="step-flow-item">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4>Fixing Connection Problems</h4>
+                                <p>
+                                    For hardware wallets, I try a different USB cable and port. In browser wallets, I clear the cache and restart the extension.
+                                </p>
+    
+                                <div class="expert-toggle">Advanced Details ▸</div>
+                                <div class="expert-panel">
+                                    <ul class="bullet-list">
+                                        <li>I check for conflicting extensions and disable them temporarily.</li>
+                                        <li>I switch to a different RPC if the default is lagging.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <!-- Step 3 -->
+                        <div class="step-flow-item">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h4>Resolving Missing Balances</h4>
+                                <p>
+                                    I verify the network and add custom tokens if needed. Then, I refresh the wallet and check the explorer to confirm funds are there.
+                                </p>
+    
+                                <div class="expert-toggle">Advanced Details ▸</div>
+                                <div class="expert-panel">
+                                    <ul class="bullet-list">
+                                        <li>I reset the account in MetaMask to force a resync.</li>
+                                        <li>I ensure the derivation path matches if using hardware.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+    
+                    </div>
+                </div>
+            </div>
+        </section>
+    
+        <!-- How I Think About Security, Seed Phrases, and Safe Recovery Practices -->
+        <section class="section">
+            <div class="container">
+                <h2>How I Think About Security, Seed Phrases, and Safe Recovery Practices</h2>
+                <p class="section-intro">
+                    Security is my top priority. Here's how I approach it in practice.
+                </p>
+    
+                <div class="card">
+                    <ul class="bullet-list">
+                        <li>I treat seed phrases like cash: I write them on metal plates and store them in a fireproof safe, never digitally.</li>
+                        <li>For recovery, I test restoring a wallet with a small amount first to ensure I have the process down.</li>
+                        <li>I use passphrases on Ledger for an extra layer, but keep them simple and memorable.</li>
+                        <li>I never share seeds or enter them on untrusted devices; I verify every signature prompt.</li>
+                        <li>I enable 2FA on exchanges and use hardware for large holdings to minimize hot wallet risks.</li>
+                    </ul>
+    
+                    <div class="expert-toggle">Advanced Thoughts ▸</div>
+                    <div class="expert-panel">
+                        <ul class="bullet-list">
+                            <li>I consider threat models: physical theft vs. digital phishing.</li>
+                            <li>I rotate seeds periodically for high-value wallets.</li>
+                            <li>I use multi-sig setups for team or high-stakes scenarios.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+    
+        <!-- Differences Between and How I Use Hardware Devices and Browser-Based Wallets -->
+        <section class="section">
+            <div class="container">
+                <h2>Differences Between and How I Use Hardware Devices and Browser-Based Wallets</h2>
+                <p class="section-intro">
+                    Hardware and browser wallets serve different purposes in my setup. Here's how I differentiate and use them.
+                </p>
+    
+                <div class="card">
+                    <div class="step-flow">
+    
+                        <!-- Differences -->
+                        <div class="step-flow-item">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4>Key Differences</h4>
+                                <p>
+                                    Hardware wallets like Ledger keep private keys completely offline, requiring physical confirmation on the device for every transaction—making them far more secure against online attacks. 
+                                    Browser-based wallets like MetaMask or software wallets like Exodus store keys on my device, which makes them convenient and fast for frequent use but more exposed to malware, phishing, or device compromise.
+                                </p>
+    
+                                <div class="expert-toggle">Advanced Details ▸</div>
+                                <div class="expert-panel">
+                                    <ul class="bullet-list">
+                                        <li>Hardware: Ideal for security; slower due to physical confirmations.</li>
+                                        <li>Browser/Software: Great for speed and dApp interaction; requires vigilant device hygiene.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <!-- How I Use Hardware -->
+                        <div class="step-flow-item">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4>How I Use Hardware Wallets (Ledger)</h4>
+                                <p>
+                                    My long-term holds and larger amounts stay on Ledger for the extra security—keys never touch the internet. 
+                                    I connect it to MetaMask or Ledger Live for signing transactions, always reviewing details on the device screen before confirming. 
+                                    I use it mainly for staking, holding, or infrequent large transfers.
+                                </p>
+    
+                                <div class="expert-toggle">Advanced Details ▸</div>
+                                <div class="expert-panel">
+                                    <ul class="bullet-list">
+                                        <li>I avoid blind signing by checking contract addresses and values.</li>
+                                        <li>I keep only necessary apps installed to reduce attack surface.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <!-- How I Use Browser-Based / Software -->
+                        <div class="step-flow-item">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h4>How I Use Browser-Based and Software Wallets (MetaMask & Exodus)</h4>
+                                <p>
+                                    For more frequent transactions, quick trades, testing, or smaller profits, I use MetaMask (browser) and Exodus (software). 
+                                    I keep only working amounts there—enough for daily use but not life-changing sums. 
+                                    This allows faster signing and easier dApp interactions without needing to plug in hardware every time.
+                                </p>
+    
+                                <div class="expert-toggle">Advanced Details ▸</div>
+                                <div class="expert-panel">
+                                    <ul class="bullet-list">
+                                        <li>I use multiple accounts in MetaMask for organization (e.g., one for DeFi, one for testing).</li>
+                                        <li>I customize RPCs in MetaMask for better performance on different chains.</li>
+                                        <li>I lock wallets when not in use and monitor for suspicious activity.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Off-ramping Funds -->
+                        <div class="step-flow-item">
+                            <div class="step-number">4</div>
+                            <div class="step-content">
+                                <h4>Basic Steps to Transfer from Wallets to an Exchange to Sell into Fiat (Off-ramp)</h4>
+                                <p>
+                                    When I want to cash out, I first log into my exchange (e.g., Coinbase, Binance) and generate a deposit address for the asset (ensure correct network—e.g., Ethereum for ETH). 
+                                    Then, in my wallet:
+                                </p>
+                                <p><strong>From MetaMask or Exodus:</strong> I select the asset, click "Send", paste the exchange deposit address, double-check it (and network), enter the amount (leaving enough for gas), and confirm. I wait for confirmation on the explorer.</p>
+                                <p><strong>From Ledger:</strong> I open Ledger Live or connect via MetaMask, select the account/asset, choose "Send", paste the exchange address, review on the Ledger device screen, and physically confirm the transaction.</p>
+                                <p>Once confirmed on-chain, funds appear in the exchange. I sell to fiat there, then withdraw to my bank account via the exchange's off-ramp options (ensure KYC is complete).</p>
+    
+                                <div class="expert-toggle">Advanced Details ▸</div>
+                                <div class="expert-panel">
+                                    <ul class="bullet-list">
+                                        <li>I always send a small test amount first to verify the address.</li>
+                                        <li>I check exchange deposit memos/tags if required (e.g., for XRP).</li>
+                                        <li>I factor in network fees and exchange withdrawal minimums.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+    
+                    </div>
+                </div>
+            </div>
+        </section>
+    
+        </main>
+    
+        <!-- Contact -->
+        <section id="contact" class="section section-alt">
+            <div class="container two-column">
+                <div>
+                    <h2>Let’s Talk</h2>
+                    <p class="section-intro">
+                        I’m open to roles in SaaS, fintech and Web3 support—particularly where reliability,
+                        observability, and customer impact are central.
+                    </p>
+                </div>
+                <div class="contact-block">
+                    <p><strong>Email:</strong> <a href="mailto:johnbeedles@gmail.com">johnbeedles@gmail.com</a></p>
+                    <p><strong>Location:</strong> Bournemouth, United Kingdom</p>
+                    <p><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/john-beedles-a428b3139" target="_blank">View Profile</a></p>
+                </div>
+            </div>
+        </section>
+    
+        <footer class="site-footer">
+            <div class="container footer-container">
+                <p>© <span id="year"></span> John Beedles. All rights reserved.</p>
+            </div>
+        </footer>
+    
+    </div>
+    
+    <!-- Advanced Details Script -->
+    <script>
+    document.querySelectorAll('.expert-toggle').forEach(toggle => {
+        toggle.addEventListener('click', () => {
+            const panel = toggle.nextElementSibling;
+            panel.classList.toggle('open');
+        });
+    });
+    </script>
+    
+</body>
+</html>

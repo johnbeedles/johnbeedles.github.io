@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ethereum Transaction Tracing - Basic Transaction | John Beedles</title>
+
+    <!-- Modular CSS -->
+    <link rel="stylesheet" href="core.css">
+    <link rel="stylesheet" href="components.css">
+    <link rel="stylesheet" href="pages.css">
+</head>
+
+<script>
+    document.querySelectorAll('.expert-toggle').forEach(toggle => { 
+        toggle.addEventListener('click', () => { 
+            const panel = toggle.nextElementSibling; panel.classList.toggle('open'); 
+        }); 
+    });
+</script>
+
+<body>
+    
+    <div class="mobile-warning">
+        This site has not been optimised for mobile devices — best viewed on desktop or tablet
+    </div>
+    
+    <div class="site-wrapper">
+    
+        <!-- Header -->
+        <header class="site-header">
+            <div class="container header-container">
+                <div class="logo">
+                    <span class="logo-mark">JB</span>
+                    <span class="logo-text">John Beedles</span>
+                </div>
+                <nav class="nav">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="cv.html" class="nav-link">CV</a>
+                    <a href="portfolio.html" class="nav-link active">Portfolio</a>
+                    <a href="#contact" class="nav-link">Contact</a>
+                </nav>
+            </div>
+        </header>
+    
+        <main>
+    
+        <!-- Hero -->
+        <section class="hero">
+            <div class="container hero-container">
+                <div class="hero-content">
+                    <h1 class="hero-title">
+                        Ethereum Transaction Tracing<br>
+                        <span class="hero-highlight">Basic Transaction</span>
+                    </h1>
+    
+                    <p class="hero-subtitle">
+                        In this project, I walk through a real Ethereum transaction on Etherscan and break down exactly what happened, 
+                        why it happened, and how I interpret the data as a crypto‑native support engineer.
+                    </p>
+    
+                    <div class="hero-actions">
+                        <a href="portfolio.html" class="btn btn-primary">My Portfolio</a>
+                    </div>
+    
+                    <div class="hero-meta">
+                        <span>On‑chain Analysis</span>
+                        <span>Gas & Fees</span>
+                        <span>Beginner‑Friendly</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    
+        <!-- Project Overview -->
+        <section class="section">
+            <div class="container two-column">
+    
+                <!-- LEFT -->
+                <div>
+                    <h2>Project Overview</h2>
+                    <p class="section-intro">
+                        I selected a simple ETH transfer so I could clearly demonstrate the fundamentals of transaction tracing 
+                        without the complexity of contract interactions or internal calls. This allows me to focus on the core 
+                        mechanics of how Ethereum processes a transaction.
+                    </p>
+    
+                    <h3>What This Project Demonstrates</h3>
+                    <ul class="bullet-list">
+                        <li>How to interpret a basic ETH transfer</li>
+                        <li>How to read sender/receiver flow</li>
+                        <li>How to break down gas fees</li>
+                        <li>How to confirm block inclusion</li>
+                        <li>How to explain transactions to beginners</li>
+                    </ul>
+                </div>
+    
+                <!-- RIGHT -->
+                <div class="card">
+                    <h3>Skills Demonstrated</h3>
+                    <ul class="bullet-list">
+                        <li>On‑chain data analysis</li>
+                        <li>Gas & fee interpretation</li>
+                        <li>Transaction lifecycle tracing</li>
+                        <li>Sender/receiver flow analysis</li>
+                        <li>Beginner‑friendly explanation</li>
+                    </ul>
+    
+                    <h3 style="margin-top:1.5rem;">Tools Used</h3>
+                    <ul class="bullet-list">
+                        <li>Etherscan</li>
+                        <li>Ethereum mainnet</li>
+                        <li>Web3 fundamentals</li>
+                    </ul>
+                </div>
+    
+            </div>
+        </section>
+    
+        <!-- Transaction Details -->
+        <section class="section">
+            <div class="container">
+                <h2>Transaction Details</h2>
+                <p class="section-intro">
+                    This transaction is a simple ETH transfer between two externally owned accounts (EOAs). 
+                    No contracts, no internal calls — perfect for teaching the fundamentals.
+                </p>
+    
+                <div class="card">
+                    <h3>Key Data</h3>
+                    <ul class="bullet-list">
+                        <li><strong>Hash:</strong> 0xe9f9b425c309bfb6a952578e8becd08d7558462a143b8c31a9e42f2a35025a08</li>
+                        <li><strong>Status:</strong> Success</li>
+                        <li><strong>Block Number:</strong> 24355925 (42660 confirmations)</li>
+                        <li><strong>Timestamp:</strong> Jan-31-2026 04:02:47 PM UTC (5 days ago)</li>
+                        <li><strong>From:</strong> 0x296e7Ee19b5A41123134f28084ff9402E1F9fF6c</li>
+                        <li><strong>To:</strong> 0x10DA943125d26e07266dAf1816A4EB4722D28e85</li>
+                        <li><strong>Value:</strong> 0.374798792129039 ETH ($739.18)</li>
+                        <li><strong>Transaction Fee:</strong> 0.000067487870961 ETH ($0.13)</li>
+                        <li><strong>Gas Price:</strong> 3.213708141 Gwei</li>
+                        <li><strong>Gas Used:</strong> 21,000</li>
+                        <li><strong>Gas Limit:</strong> 21,000 (100% used)</li>
+                        <li><strong>Nonce:</strong> 117</li>
+                        <li><strong>Position in Block:</strong> 285</li>
+                        <li><strong>Transaction Type:</strong> 2 (EIP-1559)</li>
+                        <li><strong>Input Data Summary:</strong> 0x (empty, indicating a simple ETH transfer)</li>
+                        <li><strong>Block:</strong> 24355925</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    
+        <!-- Step-by-Step Process -->
+        <section class="section">
+            <div class="container">
+                <h2>My Step‑by‑Step Process</h2>
+                <p class="section-intro">
+                    I began by opening the transaction on Etherscan. My goal was to understand the transaction from end to end — 
+                    not just what happened, but why it happened and what each field tells me about the behaviour of the network.
+                </p>
+    
+                <div class="card">
+                    <div class="step-flow">
+    
+                        <!-- Step 1 -->
+                        <div class="step-flow-item">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4>Identifying the Sender and Receiver</h4>
+                                <p>
+                                    The From address is the wallet that initiated the transaction. The To address is the wallet receiving the ETH. 
+                                    This is a simple transfer between two externally owned accounts (EOAs), which means there are no smart contracts 
+                                    involved and no internal transactions.
+                                </p>
+                            </div>
+                        </div>
+    
+                        <!-- Step 2 -->
+                        <div class="step-flow-item">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4>Understanding the Value Sent</h4>
+                                <p>
+                                    The sender transferred <strong>0.374798792129039 ETH</strong>. This amount is separate from the gas fee — 
+                                    the receiver only gets the value, not the fee.
+                                </p>
+                            </div>
+                        </div>
+    
+                        <!-- Step 3 -->
+                        <div class="step-flow-item">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h4>Breaking Down the Gas Fee</h4>
+                                <p>
+                                    Gas Used: 21,000 (standard for ETH transfers)<br>
+                                    Gas Price: 3.213708141 Gwei<br>
+                                    Fee Paid: 0.000067487870961 ETH (~$0.13)
+                                </p>
+    
+                                <div class="expert-toggle">Advanced Details ▸</div>
+                                <div class="expert-panel">
+                                    <ul class="bullet-list">
+                                        <li>Low gas price indicates low network congestion</li>
+                                        <li>21,000 gas is the minimum required for a transfer</li>
+                                        <li>Fee confirms efficient inclusion in the next block</li>
+                                        <li>Gas fees breakdown: Base Fee 0.960290033 Gwei, Max Fee 3.213708141 Gwei, Max Priority Fee 3.213708141 Gwei.</li>
+                                        <li>Burnt fee: 0.000020166090693 ETH ($0.04).</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <!-- Step 4 -->
+                        <div class="step-flow-item">
+                            <div class="step-number">4</div>
+                            <div class="step-content">
+                                <h4>Checking Block Inclusion</h4>
+                                <p>
+                                    The transaction was included in block <strong>24355925</strong> and confirmed within 30 seconds. 
+                                    This tells me the gas price chosen was appropriate for the network conditions at the time.
+                                </p>
+                            </div>
+                        </div>
+    
+                        <!-- Step 5 -->
+                        <div class="step-flow-item">
+                            <div class="step-number">5</div>
+                            <div class="step-content">
+                                <h4>Reviewing Logs and Internal Transactions</h4>
+                                <p>
+                                    Because this is a simple ETH transfer, there are no logs or internal calls. 
+                                    This contrasts with DeFi transactions, where logs and internal calls reveal most of the interesting behaviour.
+                                </p>
+                            </div>
+                        </div>
+    
+                        <!-- Step 6 -->
+                        <div class="step-flow-item">
+                            <div class="step-number">6</div>
+                            <div class="step-content">
+                                <h4>Summarising the Transaction</h4>
+                                <p>
+                                    In plain English: one wallet sent <strong>0.3748 ETH</strong> to another wallet and paid a small gas fee of 
+                                    <strong>0.000067 ETH</strong>. The transaction was processed quickly, required no contract interactions, 
+                                    and behaved exactly as expected for a standard ETH transfer.
+                                </p>
+                            </div>
+                        </div>
+    
+                    </div>
+                </div>
+    
+            </div>
+        </section>
+
+        <!-- New Section: Transaction Flow -->
+        <section class="section">
+            <div class="container">
+                <h2>Transaction Flow</h2>
+                <p class="section-intro">
+                    This transaction is a simple ETH transfer between two externally owned accounts. No direct involvement of smart contracts, tokens, or liquidity pools.
+                </p>
+
+                <div class="card">
+                    <h3>Step-by-Step Trace</h3>
+                    <ol class="bullet-list">
+                        <li><strong>Initiation:</strong> Transaction sent from 0x296e7Ee19b5A41123134f28084ff9402E1F9fF6c to 0x10DA943125d26e07266dAf1816A4EB4722D28e85, transferring 0.374798792129039 ETH.</li>
+                        <li><strong>Settlement:</strong> The transfer is confirmed on the blockchain with no additional operations.</li>
+                    </ol>
+
+                    <h3>Simple Flow Diagram (Text-Based)</h3>
+                    <pre>
+Sender Wallet (0x296e...) → Recipient Wallet (0x10DA...)
+    |
+    Amount: 0.374798792129039 ETH ($739.18)
+                    </pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- New Section: Token Transfers -->
+        <section class="section">
+            <div class="container">
+                <h2>Token Transfers</h2>
+                <div class="card">
+                    <ul class="bullet-list">
+                        <li>None (This is a native ETH transfer, not involving ERC-20 tokens or NFTs).</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- New Section: Additional Notes -->
+        <section class="section">
+            <div class="container">
+                <h2>Additional Notes</h2>
+                <div class="card">
+                    <ul class="bullet-list">
+                        <li>No protocols involved; direct peer-to-peer transfer.</li>
+                        <li>No internal transactions, event logs, or contract invocations.</li>
+                        <li>Net Result: Sender pays 0.000067487870961 ETH in fees; recipient receives 0.374798792129039 ETH.</li>
+                        <li>ETH price at transaction time approximately $1,972.50 (based on USD conversions).</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    
+        </main>
+    
+        <!-- Contact -->
+        <section id="contact" class="section section-alt">
+            <div class="container two-column">
+                <div>
+                    <h2>Let’s Talk</h2>
+                    <p class="section-intro">
+                        I’m open to roles in SaaS, fintech and Web3 support—particularly where reliability,
+                        observability, and customer impact are central.
+                    </p>
+                </div>
+                <div class="contact-block">
+                    <p><strong>Email:</strong> <a href="mailto:johnbeedles@gmail.com">johnbeedles@gmail.com</a></p>
+                    <p><strong>Location:</strong> Bournemouth, United Kingdom</p>
+                    <p><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/john-beedles-a428b3139" target="_blank">View Profile</a></p>
+                </div>
+            </div>
+        </section>
+    
+        <footer class="site-footer">
+            <div class="container footer-container">
+                <p>© <span id="year"></span> John Beedles. All rights reserved.</p>
+            </div>
+        </footer>
+    
+    </div>
+    
+    <!-- Advanced Details Script -->
+    <script>
+    document.querySelectorAll('.expert-toggle').forEach(toggle => {
+        toggle.addEventListener('click', () => {
+            const panel = toggle.nextElementSibling;
+            panel.classList.toggle('open');
+        });
+    });
+    </script>
+    
+</body>
+</html>
