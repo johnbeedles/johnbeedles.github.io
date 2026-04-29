@@ -55,7 +55,8 @@
                     </h1>
     
                     <p class="hero-subtitle">
-                        In this project, I trace a complex Ethereum transaction involving multiple swaps on Uniswap V3 and Balancer, breaking down the flow, fees, and net results as a crypto‑native support engineer.
+                        In this project, I trace a complex Ethereum transaction involving multiple swaps across Uniswap V3 and Balancer, 
+                        breaking down execution flow, contract interactions, and true net outcomes from a support engineer perspective.
                     </p>
     
                     <div class="hero-actions">
@@ -79,7 +80,8 @@
                 <div>
                     <h2>Project Overview</h2>
                     <p class="section-intro">
-                        I selected a complex multi-hop token swap to demonstrate advanced transaction tracing, including contract calls, liquidity pools, and profit calculation, without oversimplifying the DeFi mechanics.
+                        I selected a complex multi-hop token swap to demonstrate accurate transaction tracing, including contract interactions, liquidity routing, and outcome validation. 
+                        The focus is on understanding what actually happened on-chain and distinguishing between perceived and real results.
                     </p>
     
                     <h3>What This Project Demonstrates</h3>
@@ -87,7 +89,7 @@
                         <li>How to trace multi-hop swaps</li>
                         <li>How to analyze internal transactions</li>
                         <li>How to interpret liquidity pool interactions</li>
-                        <li>How to calculate net profits and fees</li>
+                        <li>How to distinguish between gross output and true net profitability</li>
                         <li>How to explain complex DeFi transactions</li>
                     </ul>
                 </div>
@@ -175,7 +177,8 @@
                             <div class="step-content">
                                 <h4>Understanding the Value Sent</h4>
                                 <p>
-                                    No direct ETH transferred (0 ETH value), but WETH is used in swaps. The transaction involves token exchanges resulting in a small net profit.
+                                    No direct ETH is transferred (0 ETH value), but WETH is used within contract interactions. 
+                                    The transaction executes multiple token swaps, with the final outcome requiring comparison against gas costs to determine true profitability.
                                 </p>
                             </div>
                         </div>
@@ -220,8 +223,9 @@
                             <div class="step-content">
                                 <h4>Reviewing Logs and Internal Transactions</h4>
                                 <p>
-                                    This transaction has 15 internal transactions (approvals, calls) and event logs from swaps. 
-                                    These reveal the multi-hop path: WETH → RNG → BAL → WETH.
+                                    This transaction includes multiple internal contract calls and event logs generated during execution. 
+                                    These represent interactions between smart contracts and liquidity pools, revealing the multi-hop path: WETH → RNG → BAL → WETH. 
+                                    Internal transactions typically reflect contract execution steps rather than direct user actions, though they may include token transfers triggered by prior approvals.
                                 </p>
                             </div>
                         </div>
@@ -232,8 +236,9 @@
                             <div class="step-content">
                                 <h4>Summarising the Transaction</h4>
                                 <p>
-                                    In plain English: a wallet executed a multi-hop swap via an aggregator, trading WETH for RNG, then BAL, then back to WETH, 
-                                    netting ~0.0048 WETH profit after fees. Likely an arbitrage opportunity.
+                                    In plain English: a wallet executed a multi-hop swap via an aggregator, trading WETH for RNG, then BAL, then back to WETH. 
+                                    The final returned WETH amount is slightly higher than the initial input, suggesting a potential price optimisation or arbitrage path. 
+                                    However, after accounting for gas fees and execution costs, this does not necessarily result in net profit.
                                 </p>
                             </div>
                         </div>
@@ -249,7 +254,8 @@
             <div class="container">
                 <h2>Transaction Flow</h2>
                 <p class="section-intro">
-                    This transaction is an aggregated swap involving three token swaps across Balancer and Uniswap V3. It appears to be a multi-hop arbitrage or DeFi optimization swap: WETH → RNG → BAL → WETH, resulting in a small profit.
+                    This transaction is an aggregated swap involving three token swaps across Balancer and Uniswap V3. It follows a multi-hop route: WETH → RNG → BAL → WETH, 
+                    likely representing a routing optimisation or arbitrage attempt. The final outcome depends on execution costs such as gas fees.
                 </p>
 
                 <div class="card">
@@ -259,7 +265,7 @@
                         <li><strong>Swap 1: ETH → RNG on Uniswap V3</strong><br>Pool: Uniswap V3 RNG/ETH (0x9437ad40056ca3ec2fc1efe41885ad4b6ac46061)<br>Swap 0.433489443 WETH (~$856.60) for 193,380.02 RNG.</li>
                         <li><strong>Swap 2: RNG → BAL on Uniswap V3</strong><br>Pool: Uniswap V3 RNG-BAL (0xc6501642f183085f8343d3907ee9f0327b8fb4bf)<br>Swap 193,380.02 RNG for 218.05 BAL (~$36.92).</li>
                         <li><strong>Swap 3: BAL → ETH on Balancer</strong><br>Pool: Balancer ETH/BAL 50/50 #5 (0xe867be952ee17d2d294f2de62b13b9f4af521e9a)<br>Swap 218.05 BAL for 0.43832215 WETH (~$865.82).</li>
-                        <li><strong>Final Settlement:</strong> Ends with 0.43832215 WETH (~$866.15) in wallet. Net profit: ~$9.55 in ETH value after fees.</li>
+                        <li><strong>Final Settlement:</strong> Ends with 0.43832215 WETH (~$866.15) returned. While this exceeds the initial input, gas costs (~$9.52) likely offset the difference, resulting in negligible or no net profit.</li>
                     </ol>
 
                     <h3>Simple Flow Diagram (Text-Based)</h3>
@@ -275,7 +281,7 @@ User Wallet (0xb338...) → Aggregator (0x46fBF...)
     |--- Swap 3: BAL → WETH (Balancer Pool: 0xe867...)
     |       Amount: 218.05 BAL → 0.43832215 WETH
     |
-    Final: +0.004828 WETH profit back to User
+    Final: +0.004828 WETH gross difference returned to User (before gas costs)
                     </pre>
                 </div>
             </div>
@@ -292,7 +298,7 @@ User Wallet (0xb338...) → Aggregator (0x46fBF...)
                         <li><strong>WETH</strong> from Balancer Pool (0xe867...) to 0x46fBF407...: 0.438322150289040501 WETH ($865.82)</li>
                         <li><strong>RNG</strong> from Uniswap V3 RNG (0x9437...) to Uniswap V3 RNG-BAL (0xc650...): 193,380.016474958766014464 RNG (—)</li>
                         <li><strong>WETH</strong> from 0x46fBF407... to Uniswap V3 RNG (0x9437...): 0.433493786313103616 WETH ($856.28)</li>
-                        <li><strong>WETH</strong> from 0x46fBF407... to 0x46fBF407... (self): 0.004828363975936885 WETH ($9.54)</li>
+                        <li><strong>WETH</strong> from 0x46fBF407... to 0x46fBF407...: 0.004828363975936885 WETH ($9.54) (internal balance adjustment within contract execution)</li>
                     </ul>
                 </div>
             </div>
@@ -304,15 +310,61 @@ User Wallet (0xb338...) → Aggregator (0x46fBF...)
                 <h2>Additional Notes</h2>
                 <div class="card">
                     <ul class="bullet-list">
-                        <li>Protocols Involved: Balancer (BAL → WETH) and Uniswap V3 (WETH → RNG, RNG → BAL).</li>
-                        <li>15 zero-value internal transactions (approvals, calls, etc.).</li>
-                        <li>MEV flagged – possibly arbitrage-optimized.</li>
-                        <li>Net Result: +0.004828 WETH (~$9.54) profit after $9.52 gas fee.</li>
+                        <li>Protocols involved: Balancer (BAL → WETH) and Uniswap V3 (WETH → RNG, RNG → BAL).</li>
+                        <li>Multiple internal transactions observed, representing contract execution steps and liquidity interactions (not separate user approvals).</li>
+                        <li>Transaction pattern suggests potential routing optimisation or arbitrage behaviour, though this cannot be confirmed without deeper MEV analysis.</li>
+                        <li>Net result: while the final WETH output exceeds the initial input, gas fees (~0.0048 ETH) likely offset this difference, meaning the transaction produces little to no real profit.</li>
                     </ul>
                 </div>
             </div>
         </section>
-    
+        
+        <section class="section">
+            <div class="container">
+                <h2>Support Engineer Insight</h2>
+                <div class="card">
+                    <p>
+                        Transaction tracing in Web3 support is not just about reading a transaction — it is about accurately interpreting what actually occurred on-chain and correcting common misconceptions.
+                    </p>
+        
+                    <p>
+                        A key challenge is that users often assume wallet interfaces represent reality. In practice:
+                    </p>
+        
+                    <ul class="bullet-list">
+                        <li>The blockchain is the single source of truth</li>
+                        <li>Wallets only display interpreted data</li>
+                        <li>Complex transactions (e.g. aggregators) can appear misleading without full trace analysis</li>
+                    </ul>
+        
+                    <p>
+                        In cases like this, a user might believe:
+                    </p>
+        
+                    <ul class="bullet-list">
+                        <li>They made a profit based on final token balance</li>
+                        <li>Funds moved incorrectly due to multiple swaps</li>
+                        <li>Unexpected tokens indicate an issue</li>
+                    </ul>
+        
+                    <p>
+                        The role of a support engineer is to:
+                    </p>
+        
+                    <ul class="bullet-list">
+                        <li>Reconstruct the full transaction path across protocols</li>
+                        <li>Distinguish between intermediate and final states</li>
+                        <li>Account for execution costs such as gas and slippage</li>
+                        <li>Provide a clear, factual explanation without speculation</li>
+                    </ul>
+        
+                    <p>
+                        This ensures users understand what happened, even when the outcome is not what they expected.
+                    </p>
+                </div>
+            </div>
+        </section>
+
         </main>
     
         <!-- Contact -->

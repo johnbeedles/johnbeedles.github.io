@@ -56,7 +56,7 @@
     
                     <p class="hero-subtitle">
                         In this project, I walk through a real Ethereum transaction on Etherscan and break down exactly what happened, 
-                        why it happened, and how I interpret the data as a crypto‑native support engineer.
+                        why it happened, and how to interpret each field from a support engineer perspective.
                     </p>
     
                     <div class="hero-actions">
@@ -80,9 +80,9 @@
                 <div>
                     <h2>Project Overview</h2>
                     <p class="section-intro">
-                        I selected a simple ETH transfer so I could clearly demonstrate the fundamentals of transaction tracing 
-                        without the complexity of contract interactions or internal calls. This allows me to focus on the core 
-                        mechanics of how Ethereum processes a transaction.
+                        I selected a simple ETH transfer to clearly demonstrate the fundamentals of transaction tracing. 
+                        By removing contract complexity, this allows focus on the core mechanics of how Ethereum processes transactions 
+                        and how to validate them accurately using on-chain data.
                     </p>
     
                     <h3>What This Project Demonstrates</h3>
@@ -169,8 +169,8 @@
                                 <h4>Identifying the Sender and Receiver</h4>
                                 <p>
                                     The From address is the wallet that initiated the transaction. The To address is the wallet receiving the ETH. 
-                                    This is a simple transfer between two externally owned accounts (EOAs), which means there are no smart contracts 
-                                    involved and no internal transactions.
+                                    This is a transfer between two externally owned accounts (EOAs), meaning no smart contract execution is required 
+                                    and no internal transactions are expected.
                                 </p>
                             </div>
                         </div>
@@ -202,10 +202,10 @@
                                 <div class="expert-panel">
                                     <ul class="bullet-list">
                                         <li>Low gas price indicates low network congestion</li>
-                                        <li>21,000 gas is the minimum required for a transfer</li>
+                                        <li>21,000 gas is the minimum required for a standard ETH transfer</li>
                                         <li>Fee confirms efficient inclusion in the next block</li>
-                                        <li>Gas fees breakdown: Base Fee 0.960290033 Gwei, Max Fee 3.213708141 Gwei, Max Priority Fee 3.213708141 Gwei.</li>
-                                        <li>Burnt fee: 0.000020166090693 ETH ($0.04).</li>
+                                        <li>Gas fees follow EIP-1559: Base Fee is burned, Priority Fee goes to the validator</li>
+                                        <li>Actual priority fee paid may be lower than the max priority fee set</li>
                                     </ul>
                                 </div>
                             </div>
@@ -217,8 +217,8 @@
                             <div class="step-content">
                                 <h4>Checking Block Inclusion</h4>
                                 <p>
-                                    The transaction was included in block <strong>24355925</strong> and confirmed within 30 seconds. 
-                                    This tells me the gas price chosen was appropriate for the network conditions at the time.
+                                    The transaction was included in block <strong>24355925</strong> and confirmed quickly after submission. 
+                                    This indicates the gas settings were sufficient for timely inclusion under current network conditions.
                                 </p>
                             </div>
                         </div>
@@ -242,8 +242,8 @@
                                 <h4>Summarising the Transaction</h4>
                                 <p>
                                     In plain English: one wallet sent <strong>0.3748 ETH</strong> to another wallet and paid a small gas fee of 
-                                    <strong>0.000067 ETH</strong>. The transaction was processed quickly, required no contract interactions, 
-                                    and behaved exactly as expected for a standard ETH transfer.
+                                    <strong>0.000067 ETH</strong>. The transaction was processed successfully with no contract interaction, 
+                                    and all values align with expected behaviour for a standard ETH transfer.
                                 </p>
                             </div>
                         </div>
@@ -297,7 +297,7 @@ Sender Wallet (0x296e...) → Recipient Wallet (0x10DA...)
                 <h2>Additional Notes</h2>
                 <div class="card">
                     <ul class="bullet-list">
-                        <li>No protocols involved; direct peer-to-peer transfer.</li>
+                        <li>No smart contracts or protocols involved; direct EOA-to-EOA transfer.</li>
                         <li>No internal transactions, event logs, or contract invocations.</li>
                         <li>Net Result: Sender pays 0.000067487870961 ETH in fees; recipient receives 0.374798792129039 ETH.</li>
                         <li>ETH price at transaction time approximately $1,972.50 (based on USD conversions).</li>
@@ -306,6 +306,47 @@ Sender Wallet (0x296e...) → Recipient Wallet (0x10DA...)
             </div>
         </section>
     
+        <section class="section">
+            <div class="container">
+                <h2>Support Engineer Insight</h2>
+                <div class="card">
+                    <p>
+                        Even simple transactions like this are critical in Web3 support, as they form the foundation for diagnosing more complex issues.
+                    </p>
+        
+                    <p>
+                        A common pattern in support cases is users reporting:
+                    </p>
+        
+                    <ul class="bullet-list">
+                        <li>“Funds not received”</li>
+                        <li>“Transaction stuck or missing”</li>
+                        <li>“Incorrect balance displayed”</li>
+                    </ul>
+        
+                    <p>
+                        In these situations, the support engineer must rely on a structured validation process:
+                    </p>
+        
+                    <ul class="bullet-list">
+                        <li>Verify the transaction hash on a blockchain explorer</li>
+                        <li>Confirm status (success, pending, failed)</li>
+                        <li>Check sender, recipient, and value transferred</li>
+                        <li>Validate the correct network is being used</li>
+                    </ul>
+        
+                    <p>
+                        The key principle is that the blockchain is the source of truth. If a transaction is confirmed on-chain, 
+                        the funds have moved successfully, regardless of what a wallet interface may display.
+                    </p>
+        
+                    <p>
+                        This type of analysis allows support engineers to quickly distinguish between real issues and display or user-side misunderstandings.
+                    </p>
+                </div>
+            </div>
+        </section>
+        
         </main>
     
         <!-- Contact -->

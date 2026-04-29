@@ -55,8 +55,9 @@
                     </h1>
     
                     <p class="hero-subtitle">
-                        Here, I walk you through how I set up and manage my wallets like MetaMask, Ledger, and Exodus, 
-                        debug basic issues, prioritize security with seed phrases and recovery, and choose between hardware and browser-based wallets.
+                        Here, I walk through how I set up and manage wallets such as MetaMask, Ledger, and Exodus, 
+                        troubleshoot common issues, apply strong security practices around seed phrases and recovery, 
+                        and make decisions between hardware and software wallets based on risk and usability.
                     </p>
     
                     <div class="hero-actions">
@@ -80,8 +81,8 @@
                 <div>
                     <h2>Project Overview</h2>
                     <p class="section-intro">
-                        In this walkthrough, I share my personal approach to wallet operations: from initial setup to troubleshooting.
-                        This reflects how I handle wallets in real Web3 environments.
+                        In this walkthrough, I outline my practical approach to wallet operations, from initial setup through to troubleshooting and recovery. 
+                        This reflects how I handle real-world Web3 scenarios, focusing on accuracy, security, and clear diagnosis rather than assumptions.
                     </p>
     
                     <h3>What This Walkthrough Covers</h3>
@@ -207,7 +208,7 @@
             <div class="container">
                 <h2>How I Debug and Resolve Basic Issues</h2>
                 <p class="section-intro">
-                    When something goes wrong, I follow these steps to try to fix them.
+                    When something goes wrong, I follow a structured process to diagnose the issue, validate it against on-chain data where applicable, and determine whether the cause is user input, wallet behaviour, or network conditions.
                 </p>
     
                 <div class="card">
@@ -257,7 +258,8 @@
                             <div class="step-content">
                                 <h4>Resolving Missing Balances</h4>
                                 <p>
-                                    I verify the network and add custom tokens if needed. Then, I refresh the wallet and check the explorer to confirm funds are there.
+                                    I verify the correct network is selected and add the token contract manually if needed. I then check a blockchain explorer to confirm whether the funds exist on-chain. 
+                                    This helps determine whether the issue is a display problem in the wallet or an actual transfer issue.
                                 </p>
     
                                 <div class="expert-toggle">Advanced Details ▸</div>
@@ -296,7 +298,7 @@
                     <div class="expert-panel">
                         <ul class="bullet-list">
                             <li>I consider threat models: physical theft vs. digital phishing.</li>
-                            <li>I rotate seeds periodically for high-value wallets.</li>
+                            <li>I only generate new wallets when required rather than rotating seed phrases unnecessarily, as secure storage is more important than frequent regeneration.</li>
                             <li>I use multi-sig setups for team or high-stakes scenarios.</li>
                         </ul>
                     </div>
@@ -321,8 +323,8 @@
                             <div class="step-content">
                                 <h4>Key Differences</h4>
                                 <p>
-                                    Hardware wallets like Ledger keep private keys completely offline, requiring physical confirmation on the device for every transaction—making them far more secure against online attacks. 
-                                    Browser-based wallets like MetaMask or software wallets like Exodus store keys on my device, which makes them convenient and fast for frequent use but more exposed to malware, phishing, or device compromise.
+                                    Hardware wallets like Ledger keep private keys isolated from the internet, requiring physical confirmation on the device for each transaction. 
+                                    Browser and software wallets like MetaMask and Exodus store encrypted keys on the device, making them more convenient but more exposed to risks such as malware, phishing, or device compromise.
                                 </p>
     
                                 <div class="expert-toggle">Advanced Details ▸</div>
@@ -389,7 +391,7 @@
                                 </p>
                                 <p><strong>From MetaMask or Exodus:</strong> I select the asset, click "Send", paste the exchange deposit address, double-check it (and network), enter the amount (leaving enough for gas), and confirm. I wait for confirmation on the explorer.</p>
                                 <p><strong>From Ledger:</strong> I open Ledger Live or connect via MetaMask, select the account/asset, choose "Send", paste the exchange address, review on the Ledger device screen, and physically confirm the transaction.</p>
-                                <p>Once confirmed on-chain, funds appear in the exchange. I sell to fiat there, then withdraw to my bank account via the exchange's off-ramp options (ensure KYC is complete).</p>
+                                <p>Once the transaction is confirmed on-chain, the funds are credited to the exchange account. I then execute the trade into fiat and withdraw to my bank account using the exchange’s off-ramp options, ensuring all compliance requirements (such as KYC) are completed.</p>
     
                                 <div class="expert-toggle">Advanced Details ▸</div>
                                 <div class="expert-panel">
@@ -406,7 +408,48 @@
                 </div>
             </div>
         </section>
-    
+        
+        <section class="section">
+            <div class="container">
+                <h2>Support Engineer Insight</h2>
+                <div class="card">
+                    <p>
+                        Supporting non-custodial wallets requires a fundamentally different approach compared to traditional financial systems.
+                    </p>
+        
+                    <p>
+                        In this model, the wallet does not hold or control user funds. Instead, it provides access to assets that exist on the blockchain, 
+                        with the user maintaining full control through their private keys or recovery phrase.
+                    </p>
+        
+                    <p>
+                        This creates a key constraint:
+                    </p>
+        
+                    <ul class="bullet-list">
+                        <li>Transactions cannot be reversed or modified once confirmed</li>
+                        <li>Funds cannot be recovered if access is lost</li>
+                        <li>The blockchain, not the wallet, is the source of truth</li>
+                    </ul>
+        
+                    <p>
+                        As a result, the role of a support engineer is not to “fix” transactions, but to:
+                    </p>
+        
+                    <ul class="bullet-list">
+                        <li>Interpret on-chain activity accurately</li>
+                        <li>Identify whether issues are caused by user input, wallet behaviour, or network conditions</li>
+                        <li>Explain outcomes clearly and without ambiguity</li>
+                        <li>Help users prevent future issues through better understanding</li>
+                    </ul>
+        
+                    <p>
+                        This shifts support from control-based problem solving to clarity, education, and precise technical diagnosis.
+                    </p>
+                </div>
+            </div>
+        </section>
+
         </main>
     
         <!-- Contact -->
