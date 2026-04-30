@@ -277,13 +277,3 @@ main {
     }
 }
 
-.mobile-warning {
-    background-color: #c0392b;
-    color: white;
-    text-align: center;
-    padding: 10px 12px;
-    font-size: 14px;
-    font-weight: 500;
-    border-bottom: 1px solid #a93226;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-}
