@@ -17,13 +17,21 @@
 }
 
 .btn-primary {
-    background: var(--color-accent);
-    color: #05060a;
+    background: #3b82f6;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
 }
 
 .btn-primary:hover {
-    background: #38b2ac;
+    background: #2563eb; /* slightly darker blue */
+    color: #ffffff;      /* stays EXACTLY the same */
     transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(59, 130, 246, 0.3);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+    box-shadow: 0 3px 8px rgba(59, 130, 246, 0.2);
 }
 
 .btn-secondary {
@@ -34,6 +42,8 @@
 
 .btn-secondary:hover {
     border-color: var(--color-accent);
+    color: var(--color-accent);
+    background: rgba(59, 130, 246, 0.08);
 }
 
 .cv-download {
@@ -53,9 +63,9 @@
 .card:hover {
     transform: translateY(-4px);
     box-shadow:
-        0 0 12px rgba(79, 209, 197, 0.25),
+        0 0 12px rgba(59, 130, 246, 0.25),
         0 4px 12px rgba(0, 0, 0, 0.35);
-    border-color: rgba(79, 209, 197, 0.35);
+    border-color: rgba(59, 130, 246, 0.35);
 }
 
 .card h3 {

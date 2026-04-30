@@ -17,8 +17,12 @@
     --color-bg-alt: #0b0d13;
     --color-surface: #11141c;
     --color-surface-alt: #181c26;
-    --color-accent: #4fd1c5;
-    --color-accent-soft: rgba(79, 209, 197, 0.12);
+
+    /* UPDATED ACCENTS */
+    --color-accent: #3b82f6;
+    --color-accent-strong: #2563eb;
+    --color-accent-soft: rgba(59, 130, 246, 0.12);
+
     --color-text: #f5f7fb;
     --color-text-muted: #a0a4b8;
     --color-border: #262a36;
@@ -51,7 +55,10 @@ a {
     text-decoration: none;
 }
 
-a:hover,
+a:hover {
+    color: var(--color-accent);
+}
+
 a:focus,
 a:active {
     color: inherit;
@@ -104,7 +111,7 @@ main {
     width: 32px;
     height: 32px;
     border-radius: 999px;
-    background: radial-gradient(circle at 30% 30%, #4fd1c5, #1a202c);
+    background: radial-gradient(circle at 30% 30%, #3b82f6, #0b1220);
     display: inline-flex;
     align-items: center;
     justify-content: center;

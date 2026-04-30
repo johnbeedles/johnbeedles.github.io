@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Study: Incident — Partial Payment Degradation | John Beedles</title>
+
+    <!-- Modular CSS -->
+    <link rel="stylesheet" href="core.css">
+    <link rel="stylesheet" href="components.css">
+    <link rel="stylesheet" href="pages.css">
+</head>
+<body>
+    
+    <div class="mobile-warning">
+        This site has not been optimised for mobile devices — best viewed on desktop or tablet
+    </div>
+    
+    <div class="site-wrapper">
+    
+        <!-- Header -->
+        <header class="site-header">
+            <div class="container header-container">
+                <div class="logo">
+                    <span class="logo-mark">JB</span>
+                    <span class="logo-text">John Beedles</span>
+                </div>
+                <nav class="nav">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="cv.html" class="nav-link">CV</a>
+                    <a href="portfolio.html" class="nav-link active">Portfolio</a>
+                    <a href="#contact" class="nav-link">Contact</a>
+                </nav>
+            </div>
+        </header>
+    
+        <main>
+    
+        <!-- Hero -->
+        <section class="hero">
+            <div class="container hero-container">
+                <div class="hero-content">
+                    <h1 class="hero-title">
+                        Case Study: Production Incident<br>
+                        <span class="hero-highlight">Partial Payment Degradation</span>
+                    </h1>
+    
+                    <p class="hero-subtitle">
+                        End-to-end ownership of a partial service degradation affecting payment flows, demonstrating 
+                        structured incident management and collaboration with engineering teams.
+                    </p>
+    
+                    <div class="hero-actions">
+                        <a href="portfolio.html" class="btn btn-primary">Back to Portfolio</a>
+                    </div>
+    
+                    <div class="hero-meta">
+                        <span>Incident Management</span>
+                        <span>Observability</span>
+                        <span>Stakeholder Communication</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    
+        <!-- Project Overview -->
+        <section class="section">
+            <div class="container two-column">
+    
+                <!-- LEFT -->
+                <div>
+                    <h2>Project Overview</h2>
+                    <p class="section-intro">
+                        This case study covers a real-world style production incident where a downstream dependency caused 
+                        intermittent failures in the payment service. It demonstrates how I lead triage, communicate clearly, 
+                        and drive long-term improvements.
+                    </p>
+    
+                    <h3>What This Case Demonstrates</h3>
+                    <ul class="bullet-list">
+                        <li>Fast and accurate incident triage</li>
+                        <li>Use of observability tools under pressure</li>
+                        <li>Clear stakeholder communication</li>
+                        <li>Driving resilience improvements</li>
+                    </ul>
+                </div>
+    
+                <!-- RIGHT -->
+                <div class="card">
+                    <h3>Skills Demonstrated</h3>
+                    <ul class="bullet-list">
+                        <li>Major incident ownership</li>
+                        <li>Root cause analysis</li>
+                        <li>Cross-functional collaboration</li>
+                        <li>Runbook &amp; process improvement</li>
+                        <li>Reducing MTTR</li>
+                    </ul>
+    
+                    <h3 style="margin-top:1.5rem;">Tools Used</h3>
+                    <ul class="bullet-list">
+                        <li>Splunk &amp; Dynatrace</li>
+                        <li>OpsGenie</li>
+                        <li>ServiceNow</li>
+                        <li>Jira</li>
+                    </ul>
+                </div>
+    
+            </div>
+        </section>
+    
+        <!-- Investigation -->
+        <section class="section">
+            <div class="container">
+                <h2>Incident Timeline</h2>
+                <div class="card">
+                    <ul class="bullet-list">
+                        <li><strong>09:02</strong> — Monitoring alerts triggered for elevated error rate in payment endpoint.</li>
+                        <li><strong>09:05</strong> — Acknowledged alert, joined incident bridge, and began initial triage.</li>
+                        <li><strong>09:12</strong> — Confirmed partial degradation using Splunk queries and Dynatrace service maps.</li>
+                        <li><strong>09:20</strong> — Isolated root cause through trace analysis and downstream metrics.</li>
+                        <li><strong>09:35</strong> — Applied mitigation (circuit breaker + traffic rerouting).</li>
+                        <li><strong>10:10</strong> — Full recovery confirmed and post-incident review initiated.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    
+        <!-- Root Cause -->
+        <section class="section">
+            <div class="container">
+                <h2>Root Cause</h2>
+                <div class="card">
+                    <p>High latency in a downstream address verification service caused timeouts in the main payment flow. 
+                    The dependency was not sufficiently isolated, allowing the issue to impact overall transaction success rate.</p>
+                </div>
+            </div>
+        </section>
+    
+        <!-- Resolution -->
+        <section class="section">
+            <div class="container">
+                <h2>Resolution &amp; Improvements</h2>
+                <div class="card">
+                    <ul class="bullet-list">
+                        <li>Activated circuit breaker and fallback logic to prevent total outage.</li>
+                        <li>Improved monitoring with better alerting on downstream latency and transaction success rates.</li>
+                        <li>Collaborated with engineering to implement retries with backoff and graceful degradation.</li>
+                        <li>Updated runbooks, monitoring thresholds, and added synthetic checks for the critical dependency.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    
+        <!-- Support Engineer Insight -->
+        <section class="section">
+            <div class="container">
+                <h2>Support Engineer Insight</h2>
+                <div class="card">
+                    <p>
+                        Partial degradations can often be more damaging than full outages because they are harder to detect quickly. 
+                        Strong observability, calm leadership during incidents, and a focus on long-term resilience are essential 
+                        when supporting critical financial infrastructure.
+                    </p>
+                    <p>
+                        This experience directly translates to supporting platforms like Circle, where reliability and clear communication 
+                        during incidents are paramount.
+                    </p>
+                </div>
+            </div>
+        </section>
+        
+        </main>
+    
+        <!-- Contact -->
+        <section id="contact" class="section section-alt">
+            <div class="container two-column">
+                <div>
+                    <h2>Let’s Talk</h2>
+                    <p class="section-intro">
+                        I’m open to roles in SaaS, fintech and crypto/Web3 support—particularly where reliability,
+                        observability, and customer impact are central.
+                    </p>
+                </div>
+                <div class="contact-block">
+                    <p><strong>Email:</strong> <a href="mailto:johnbeedles@gmail.com">johnbeedles@gmail.com</a></p>
+                    <p><strong>Location:</strong> Bournemouth, United Kingdom</p>
+                    <p><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/john-beedles-a428b3139" target="_blank">View Profile</a></p>
+                </div>
+            </div>
+        </section>
+    
+        <footer class="site-footer">
+            <div class="container footer-container">
+                <p>© <span id="year"></span> John Beedles. All rights reserved.</p>
+            </div>
+        </footer>
+    
+    </div>
+</body>
+</html>

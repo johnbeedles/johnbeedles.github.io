@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Study: API Debugging — Failed Payment Request | John Beedles</title>
+
+    <!-- Modular CSS -->
+    <link rel="stylesheet" href="core.css">
+    <link rel="stylesheet" href="components.css">
+    <link rel="stylesheet" href="pages.css">
+</head>
+<body>
+    
+    <div class="mobile-warning">
+        This site has not been optimised for mobile devices — best viewed on desktop or tablet
+    </div>
+    
+    <div class="site-wrapper">
+    
+        <!-- Header (copy exact from your other pages) -->
+        <header class="site-header">
+            <div class="container header-container">
+                <div class="logo">
+                    <span class="logo-mark">JB</span>
+                    <span class="logo-text">John Beedles</span>
+                </div>
+                <nav class="nav">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="cv.html" class="nav-link">CV</a>
+                    <a href="portfolio.html" class="nav-link active">Portfolio</a>
+                    <a href="#contact" class="nav-link">Contact</a>
+                </nav>
+            </div>
+        </header>
+    
+        <main>
+    
+        <!-- Hero -->
+        <section class="hero">
+            <div class="container hero-container">
+                <div class="hero-content">
+                    <h1 class="hero-title">
+                        Case Study: API Debugging<br>
+                        <span class="hero-highlight">Failed Payment Request</span>
+                    </h1>
+    
+                    <p class="hero-subtitle">
+                        A realistic production investigation into intermittent merchant-specific payment API failures, 
+                        showcasing structured troubleshooting using enterprise observability tools.
+                    </p>
+    
+                    <div class="hero-actions">
+                        <a href="portfolio.html" class="btn btn-primary">Back to Portfolio</a>
+                    </div>
+    
+                    <div class="hero-meta">
+                        <span>API Troubleshooting</span>
+                        <span>Observability</span>
+                        <span>Root Cause Analysis</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    
+        <!-- Project Overview -->
+        <section class="section">
+            <div class="container two-column">
+    
+                <!-- LEFT -->
+                <div>
+                    <h2>Project Overview</h2>
+                    <p class="section-intro">
+                        This case study demonstrates how I investigate and resolve intermittent payment API failures 
+                        affecting specific merchants. It highlights the importance of log correlation, payload analysis, 
+                        and collaboration with engineering teams in a high-volume financial environment.
+                    </p>
+    
+                    <h3>What This Case Demonstrates</h3>
+                    <ul class="bullet-list">
+                        <li>Effective use of observability tools (Splunk + Dynatrace)</li>
+                        <li>Payload comparison and reproduction techniques</li>
+                        <li>Isolating issues in distributed systems</li>
+                        <li>Driving long-term fixes through clear documentation</li>
+                    </ul>
+                </div>
+    
+                <!-- RIGHT -->
+                <div class="card">
+                    <h3>Skills Demonstrated</h3>
+                    <ul class="bullet-list">
+                        <li>Incident triage &amp; escalation</li>
+                        <li>Log analysis &amp; trace debugging</li>
+                        <li>Cross-team collaboration</li>
+                        <li>Runbook improvement</li>
+                        <li>Reducing MTTR</li>
+                    </ul>
+    
+                    <h3 style="margin-top:1.5rem;">Tools Used</h3>
+                    <ul class="bullet-list">
+                        <li>Splunk &amp; Dynatrace</li>
+                        <li>Postman</li>
+                        <li>ServiceNow / OpsGenie</li>
+                        <li>Jira for follow-up</li>
+                    </ul>
+                </div>
+    
+            </div>
+        </section>
+    
+        <!-- Investigation -->
+        <section class="section">
+            <div class="container">
+                <h2>Investigation</h2>
+                <p class="section-intro">
+                    During peak hours, ~2% of payment transactions from specific merchants began failing at the API layer.
+                </p>
+    
+                <div class="card">
+                    <h3>Steps Taken</h3>
+                    <ul class="bullet-list">
+                        <li>Acknowledged alert and joined incident bridge for initial triage.</li>
+                        <li>Queried Splunk and Dynatrace for elevated error rates, filtering by endpoint, merchant ID, and error codes.</li>
+                        <li>Identified a clear pattern limited to specific merchants.</li>
+                        <li>Reproduced the issue in Postman using real failing payloads captured from logs.</li>
+                        <li>Compared successful vs failing requests to isolate differences in the <code>payment_reference</code> field.</li>
+                        <li>Analysed distributed traces to pinpoint the failing downstream validation service.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    
+        <!-- Root Cause -->
+        <section class="section">
+            <div class="container">
+                <h2>Root Cause</h2>
+                <div class="card">
+                    <p>The merchant-generated <code>payment_reference</code> field contained unexpected formats (special characters or length variations) that were not fully handled by the downstream validation service. This resulted in a 400-level error that was poorly propagated upstream.</p>
+                </div>
+            </div>
+        </section>
+    
+        <!-- Resolution -->
+        <section class="section">
+            <div class="container">
+                <h2>Resolution &amp; Improvements</h2>
+                <div class="card">
+                    <ul class="bullet-list">
+                        <li>Updated validation logic to handle edge cases while preserving security.</li>
+                        <li>Improved error messaging with better context for merchants and internal teams.</li>
+                        <li>Added targeted monitoring alerts for this error pattern.</li>
+                        <li>Enhanced runbooks with reproduction steps and payload examples.</li>
+                        <li>Worked with engineering to add contract testing for future changes.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    
+        <!-- Support Engineer Insight -->
+        <section class="section">
+            <div class="container">
+                <h2>Support Engineer Insight</h2>
+                <div class="card">
+                    <p>
+                        This case highlights how small differences in merchant data can expose edge cases in shared services. 
+                        Strong observability, methodical payload analysis, and clear communication are essential when supporting 
+                        high-volume payment platforms.
+                    </p>
+                    <p>
+                        In production support roles like those at Circle, being able to quickly isolate whether an issue is 
+                        in the API layer, a downstream dependency, or merchant-side data is a critical skill.
+                    </p>
+                </div>
+            </div>
+        </section>
+        
+        </main>
+    
+        <!-- Contact -->
+        <section id="contact" class="section section-alt">
+            <div class="container two-column">
+                <div>
+                    <h2>Let’s Talk</h2>
+                    <p class="section-intro">
+                        I’m open to roles in SaaS, fintech and crypto/Web3 support—particularly where reliability,
+                        observability, and customer impact are central.
+                    </p>
+                </div>
+                <div class="contact-block">
+                    <p><strong>Email:</strong> <a href="mailto:johnbeedles@gmail.com">johnbeedles@gmail.com</a></p>
+                    <p><strong>Location:</strong> Bournemouth, United Kingdom</p>
+                    <p><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/john-beedles-a428b3139" target="_blank">View Profile</a></p>
+                </div>
+            </div>
+        </section>
+    
+        <footer class="site-footer">
+            <div class="container footer-container">
+                <p>© <span id="year"></span> John Beedles. All rights reserved.</p>
+            </div>
+        </footer>
+    
+    </div>
+</body>
+</html>
