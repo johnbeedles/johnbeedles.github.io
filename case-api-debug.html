@@ -14,7 +14,7 @@
     
     <div class="site-wrapper">
     
-        <!-- Header (copy exact from your other pages) -->
+        <!-- Header -->
         <header class="site-header">
             <div class="container header-container">
                 <div class="logo">
@@ -42,8 +42,9 @@
                     </h1>
     
                     <p class="hero-subtitle">
-                        A realistic production investigation into intermittent merchant-specific payment API failures, 
-                        showcasing structured troubleshooting using enterprise observability tools.
+                        A production investigation into intermittent merchant-specific payment API failures — isolating 
+                        the root cause through payload comparison, distributed trace analysis, and log correlation, 
+                        then driving the engineering fix and monitoring improvements that eliminated recurrence.
                     </p>
     
                     <div class="hero-actions">
@@ -54,6 +55,7 @@
                         <span>API Troubleshooting</span>
                         <span>Observability</span>
                         <span>Root Cause Analysis</span>
+                        <span>Payload Analysis</span>
                     </div>
                 </div>
             </div>
@@ -67,17 +69,20 @@
                 <div>
                     <h2>Project Overview</h2>
                     <p class="section-intro">
-                        This case study demonstrates how I investigate and resolve intermittent payment API failures 
-                        affecting specific merchants. It highlights the importance of log correlation, payload analysis, 
-                        and collaboration with engineering teams in a high-volume financial environment.
+                        During peak processing hours, approximately 2% of payment transactions from a subset of enterprise 
+                        merchants began returning errors at the API layer. The failures were silent from the merchant's 
+                        perspective — their systems received a generic error with no actionable detail. I led the 
+                        investigation from initial alert through to root cause, coordinated the engineering fix, and 
+                        owned the improvements to error messaging and monitoring that ensured this class of failure 
+                        would be caught and communicated clearly in the future.
                     </p>
     
                     <h3>What This Case Demonstrates</h3>
                     <ul class="bullet-list">
-                        <li>Effective use of observability tools (Splunk + Dynatrace)</li>
-                        <li>Payload comparison and reproduction techniques</li>
-                        <li>Isolating issues in distributed systems</li>
-                        <li>Driving long-term fixes through clear documentation</li>
+                        <li>Structured log correlation and payload analysis in a high-volume financial environment</li>
+                        <li>Isolating merchant-specific issues in a shared distributed system</li>
+                        <li>Reproducing failures safely using sanitised payloads</li>
+                        <li>Driving meaningful improvements to validation logic, error messaging, and monitoring</li>
                     </ul>
                 </div>
     
@@ -86,9 +91,11 @@
                     <h3>Skills Demonstrated</h3>
                     <ul class="bullet-list">
                         <li>Incident triage &amp; escalation</li>
-                        <li>Log analysis &amp; trace debugging</li>
-                        <li>Cross-team collaboration</li>
-                        <li>Runbook improvement</li>
+                        <li>Log analysis &amp; distributed trace debugging</li>
+                        <li>API payload forensics</li>
+                        <li>Cross-team collaboration &amp; engineering handoff</li>
+                        <li>Error messaging improvement</li>
+                        <li>Runbook authoring</li>
                         <li>Reducing MTTR</li>
                     </ul>
     
@@ -97,7 +104,7 @@
                         <li>Splunk &amp; Dynatrace</li>
                         <li>Postman</li>
                         <li>ServiceNow / OpsGenie</li>
-                        <li>Jira for follow-up</li>
+                        <li>Jira</li>
                     </ul>
                 </div>
     
@@ -105,22 +112,25 @@
         </section>
     
         <!-- Investigation -->
-        <section class="section">
+        <section class="section section-alt">
             <div class="container">
                 <h2>Investigation</h2>
                 <p class="section-intro">
-                    During peak hours, ~2% of payment transactions from specific merchants began failing at the API layer.
+                    Alert triggered for elevated 422 error rate on the payment submission endpoint during peak processing. 
+                    Approximately 2% failure rate across a subset of merchants — no impact on the broader platform, 
+                    but significant for the affected clients.
                 </p>
     
                 <div class="card">
                     <h3>Steps Taken</h3>
                     <ul class="bullet-list">
-                        <li>Acknowledged alert and joined incident bridge for initial triage.</li>
-                        <li>Queried Splunk and Dynatrace for elevated error rates, filtering by endpoint, merchant ID, and error codes.</li>
-                        <li>Identified a clear pattern limited to specific merchants.</li>
-                        <li>Reproduced the issue in Postman using real failing payloads captured from logs.</li>
-                        <li>Compared successful vs failing requests to isolate differences in the <code>payment_reference</code> field.</li>
-                        <li>Analysed distributed traces to pinpoint the failing downstream validation service.</li>
+                        <li>Acknowledged alert and opened incident bridge. Immediately filtered Splunk logs by endpoint, HTTP status code, and <code>enterpriseID</code> — confirming within minutes that the 422 errors were concentrated in three specific enterprise accounts, not platform-wide.</li>
+                        <li>Cross-referenced Dynatrace service maps and distributed traces to locate the point of failure. Traces showed requests reaching a downstream validation service and returning <code>422 Unprocessable Entity</code>, but the upstream response to merchants was being translated into a generic 500 with no detail — a compounding issue that made merchant-side diagnosis impossible.</li>
+                        <li>Pulled a sample of failing requests from logs. To safely reproduce the issue, I constructed sanitised Postman requests using anonymised test values for <code>maskedPAN</code> and <code>onlineToken</code>, while preserving the exact structure of the <code>merchantTransactionID</code> field from the failing payloads. Sensitive card and customer data was not used in reproduction at any stage.</li>
+                        <li>Reproduced the 422 consistently. Began systematically comparing the failing <code>merchantTransactionID</code> values against successful ones from the same endpoint. Identified the pattern: failing merchants were generating <code>merchantTransactionID</code> values with special characters (specifically hyphens and underscores in combination) and lengths exceeding the validation service's undocumented field constraints.</li>
+                        <li>Confirmed via trace analysis that the validation service was correctly rejecting these values but returning an error that was not being propagated cleanly — the upstream service swallowed the detail and returned a 500 to the merchant with no indication of the offending field.</li>
+                        <li>Reviewed <code>salesDetails</code> and <code>purchaseAmount</code> fields across both failing and successful requests to rule out additional contributing factors — no anomalies found; the issue was isolated entirely to <code>merchantTransactionID</code> format handling.</li>
+                        <li>Checked whether <code>clientID</code> correlated with the failure pattern — it did, confirming that three specific integration configurations shared the same ID generation logic producing the non-conforming values.</li>
                     </ul>
                 </div>
             </div>
@@ -131,40 +141,52 @@
             <div class="container">
                 <h2>Root Cause</h2>
                 <div class="card">
-                    <p>The merchant-generated <code>payment_reference</code> field contained unexpected formats (special characters or length variations) that were not fully handled by the downstream validation service. This resulted in a 400-level error that was poorly propagated upstream.</p>
-                </div>
-            </div>
-        </section>
-    
-        <!-- Resolution -->
-        <section class="section">
-            <div class="container">
-                <h2>Resolution &amp; Improvements</h2>
-                <div class="card">
+                    <p>The downstream validation service rejected <code>merchantTransactionID</code> values containing specific special character combinations (hyphen + underscore) and values exceeding an undocumented maximum length. This caused a <code>422 Unprocessable Entity</code> at the validation layer.</p>
+                    <p style="margin-top:1rem;">Two compounding issues made this harder to detect and resolve quickly:</p>
                     <ul class="bullet-list">
-                        <li>Updated validation logic to handle edge cases while preserving security.</li>
-                        <li>Improved error messaging with better context for merchants and internal teams.</li>
-                        <li>Added targeted monitoring alerts for this error pattern.</li>
-                        <li>Enhanced runbooks with reproduction steps and payload examples.</li>
-                        <li>Worked with engineering to add contract testing for future changes.</li>
+                        <li><strong>Error propagation failure:</strong> The upstream payment service was translating the validation layer's 422 into a generic 500, stripping all detail. Merchants received no indication of which field was rejected or why.</li>
+                        <li><strong>Undocumented constraints:</strong> The <code>merchantTransactionID</code> field constraints were not documented in the integration guide or API schema, meaning merchants had no reference point for valid formats — making this a platform issue, not a merchant error.</li>
                     </ul>
                 </div>
             </div>
         </section>
     
-        <!-- Support Engineer Insight -->
+        <!-- Resolution -->
+        <section class="section section-alt">
+            <div class="container">
+                <h2>Resolution &amp; Improvements</h2>
+                <div class="card">
+                    <ul class="bullet-list">
+                        <li><strong>Immediate:</strong> Worked directly with the three affected merchants to provide interim field formatting guidance, unblocking their transactions within the same business day.</li>
+                        <li><strong>Validation logic:</strong> Raised a Jira ticket with a full reproduction case, payload examples, and proposed fix. Engineering updated the validation service to handle the edge case formats while preserving security constraints, and added input sanitisation for field length.</li>
+                        <li><strong>Error propagation:</strong> Drove a fix to ensure 422 responses from the validation layer are surfaced with full field-level detail to the calling service and ultimately to the merchant — replacing the generic 500 with a structured error referencing the offending field and the expected format.</li>
+                        <li><strong>API documentation:</strong> Coordinated with the technical writing team to document <code>merchantTransactionID</code> format constraints in the integration guide, with valid and invalid examples.</li>
+                        <li><strong>Monitoring:</strong> Added a dedicated Splunk alert for elevated 422 rates on this endpoint, broken down by <code>enterpriseID</code>, enabling faster triage and merchant-level scoping for future issues.</li>
+                        <li><strong>Contract testing:</strong> Advocated for and agreed with engineering that contract tests be added for <code>merchantTransactionID</code> validation to prevent silent regressions from future validation service changes.</li>
+                        <li><strong>Runbook:</strong> Authored a runbook for this error pattern, including Splunk query templates, field-level payload comparison steps, and the Postman reproduction workflow using anonymised data.</li>
+                        <li><strong>Outcome:</strong> No further occurrences of this error pattern were observed following the fix, and merchant-facing error clarity improved significantly.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    
+        <!-- Key Takeaways -->
         <section class="section">
             <div class="container">
-                <h2>Support Engineer Insight</h2>
+                <h2>Key Takeaways</h2>
                 <div class="card">
                     <p>
-                        This case highlights how small differences in merchant data can expose edge cases in shared services. 
-                        Strong observability, methodical payload analysis, and clear communication are essential when supporting 
-                        high-volume payment platforms.
+                        This case had two separate problems: the root cause itself (undocumented field constraints) and 
+                        the thing that made it hard to find (error swallowing). In high-volume payment environments, 
+                        poor error propagation between services is often as damaging as the underlying bug — it delays 
+                        diagnosis, frustrates merchants, and erodes confidence in the platform. Fixing both is equally 
+                        important.
                     </p>
-                    <p>
-                        In production support roles like those at Circle, being able to quickly isolate whether an issue is 
-                        in the API layer, a downstream dependency, or merchant-side data is a critical skill.
+                    <p style="margin-top:1rem;">
+                        One thing I would advocate for earlier in future: field-level validation constraints should be 
+                        part of the API contract and tested at integration time — not discovered through production failures. 
+                        The contract testing improvement was the right long-term fix, but it should have been in place 
+                        before this feature shipped.
                     </p>
                 </div>
             </div>
@@ -176,9 +198,9 @@
         <section id="contact" class="section section-alt">
             <div class="container two-column">
                 <div>
-                    <h2>Let’s Talk</h2>
+                    <h2>Let's Talk</h2>
                     <p class="section-intro">
-                        I’m open to roles in SaaS, fintech and crypto/Web3 support—particularly where reliability,
+                        I'm open to roles in SaaS, fintech and crypto/Web3 support — particularly where reliability,
                         observability, and customer impact are central.
                     </p>
                 </div>

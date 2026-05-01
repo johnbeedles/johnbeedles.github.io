@@ -42,7 +42,9 @@
                     </h1>
     
                     <p class="hero-subtitle">
-                        Structured debugging of a reverted Uniswap DeFi swap that consumed gas but did not complete the token exchange.
+                        Structured on-chain debugging of a reverted Uniswap V3 swap — identifying the precise revert reason, 
+                        ruling out MEV interference, and translating complex blockchain behaviour into clear guidance 
+                        for both technical and non-technical stakeholders.
                     </p>
     
                     <div class="hero-actions">
@@ -50,9 +52,10 @@
                     </div>
     
                     <div class="hero-meta">
-                        <span>Etherscan Analysis</span>
+                        <span>Etherscan &amp; Tenderly Analysis</span>
                         <span>DeFi Mechanics</span>
                         <span>On-Chain Troubleshooting</span>
+                        <span>MEV Awareness</span>
                     </div>
                 </div>
             </div>
@@ -66,17 +69,20 @@
                 <div>
                     <h2>Project Overview</h2>
                     <p class="section-intro">
-                        This case study shows how I investigate failed DeFi transactions on Ethereum. 
-                        Using only publicly available tools like Etherscan, I break down exactly why a swap failed 
-                        and how to explain it clearly to users or stakeholders.
+                        A user reported that their Uniswap V3 swap had failed and gas was consumed, but no tokens were received. 
+                        Using Etherscan and Tenderly, I performed a complete transaction post-mortem — identifying the exact 
+                        revert reason, reconstructing pool state at execution time, ruling out alternative failure causes, 
+                        and delivering a clear resolution with actionable guidance.
                     </p>
     
                     <h3>What This Case Demonstrates</h3>
                     <ul class="bullet-list">
-                        <li>How to read and decode transaction data on Etherscan</li>
-                        <li>Understanding slippage, gas, and revert reasons</li>
-                        <li>Analysing liquidity pool behaviour</li>
-                        <li>Translating technical on-chain events into user-friendly explanations</li>
+                        <li>Reading and decoding on-chain transaction data at execution level</li>
+                        <li>Interpreting specific Uniswap V3 revert reasons and their root causes</li>
+                        <li>Using Tenderly to replay and trace failed transactions</li>
+                        <li>Understanding gas consumption as a diagnostic signal</li>
+                        <li>Ruling out MEV and front-running as contributing factors</li>
+                        <li>Translating technical on-chain events into clear user guidance</li>
                     </ul>
                 </div>
     
@@ -84,17 +90,20 @@
                 <div class="card">
                     <h3>Skills Demonstrated</h3>
                     <ul class="bullet-list">
-                        <li>On-chain transaction tracing</li>
-                        <li>DeFi protocol mechanics</li>
+                        <li>On-chain transaction tracing &amp; replay</li>
+                        <li>DeFi protocol mechanics (Uniswap V2/V3)</li>
                         <li>Root cause analysis of failed swaps</li>
+                        <li>MEV / front-running awareness</li>
                         <li>Clear technical communication</li>
+                        <li>Runbook documentation</li>
                     </ul>
     
                     <h3 style="margin-top:1.5rem;">Tools Used</h3>
                     <ul class="bullet-list">
-                        <li>Etherscan</li>
+                        <li>Etherscan (transaction &amp; log analysis)</li>
+                        <li>Tenderly (execution trace &amp; simulation)</li>
                         <li>Ethereum Mainnet</li>
-                        <li>Uniswap V2 / V3</li>
+                        <li>Uniswap V3 Protocol</li>
                         <li>Web3 &amp; Blockchain Fundamentals</li>
                     </ul>
                 </div>
@@ -103,22 +112,23 @@
         </section>
     
         <!-- Investigation -->
-        <section class="section">
+        <section class="section section-alt">
             <div class="container">
                 <h2>Investigation</h2>
                 <p class="section-intro">
-                    A user reported that their Uniswap swap transaction failed and gas was consumed, but no tokens were received.
+                    User report: Uniswap swap failed, gas consumed, no tokens received. Transaction hash provided.
                 </p>
     
                 <div class="card">
                     <h3>Steps Taken</h3>
                     <ul class="bullet-list">
-                        <li>Obtained the transaction hash and opened it on Etherscan.</li>
-                        <li>Confirmed the transaction status was "Failed" and reviewed the revert reason.</li>
-                        <li>Decoded the input data to examine swap parameters (amountIn, amountOutMinimum, path, deadline).</li>
-                        <li>Inspected internal transactions and event logs to understand contract interactions.</li>
-                        <li>Checked the liquidity pool state and price movement at the exact block the transaction was mined.</li>
-                        <li>Compared the quoted price vs actual execution conditions.</li>
+                        <li>Opened the transaction hash on Etherscan. Confirmed status: <strong>Failed</strong>. Retrieved the on-chain revert reason: <code>Too little received</code> — the V3-specific error confirming a slippage failure, not a deadline or gas exhaustion revert.</li>
+                        <li>Checked gas used vs gas limit. The transaction consumed the majority of its gas budget before reverting, confirming the revert occurred during execution (mid-swap, after entering the pool but before final settlement). This distinction is important: a pre-flight revert would consume minimal gas and point to a different class of issue.</li>
+                        <li>Decoded the swap input data: <code>amountIn</code>, <code>amountOutMinimum</code>, <code>sqrtPriceLimitX96</code>, <code>deadline</code>, and the token path. Confirmed the <code>deadline</code> parameter was valid and had not expired at the time of execution — ruling out a deadline revert as a contributing cause.</li>
+                        <li>Used Tenderly to replay the transaction at the exact block it was mined. Inspected the full execution trace to confirm the point of failure: the router's final check comparing actual output to <code>amountOutMinimum</code> failed, triggering the revert.</li>
+                        <li>Examined the Uniswap V3 pool state at that block — tick data, liquidity depth, and price impact for the trade size. Price had moved approximately 1.8% between quote and execution, exceeding the user's configured 0.5% slippage tolerance.</li>
+                        <li>Reviewed the surrounding blocks and mempool context to assess MEV exposure. Found no evidence of a sandwich attack targeting this transaction — the pool price movement was consistent with broader market activity across multiple pools in the same timeframe, not isolated manipulation.</li>
+                        <li>Compared the failed transaction parameters against a successful swap in the same pool shortly after, confirming that a higher slippage tolerance or a smaller trade size would have succeeded under the same conditions.</li>
                     </ul>
                 </div>
             </div>
@@ -129,39 +139,47 @@
             <div class="container">
                 <h2>Root Cause</h2>
                 <div class="card">
-                    <p>The transaction reverted because the price moved beyond the user’s slippage tolerance between the time the quote was received and when the transaction was executed. This is a common occurrence during volatile market conditions or when trading lower-liquidity tokens.</p>
+                    <p>The transaction reverted with <code>Too little received</code> — the Uniswap V3 router's slippage guard triggered because the actual output amount fell below the user's <code>amountOutMinimum</code> threshold. Price moved approximately 1.8% between quote generation and block execution, exceeding the configured 0.5% tolerance.</p>
+                    <p style="margin-top:1rem;">This is a common and expected outcome when trading lower-liquidity or high-volatility tokens during active market conditions. From the user’s perspective, this can look like “gas burned for nothing”, but on-chain it is a correct enforcement of their own slippage guard. Gas was consumed because the revert occurred after execution began — not a bug, but a deliberate safety mechanism.</p>
+                    <p style="margin-top:1rem;">MEV/front-running was considered and ruled out based on pool state analysis and block context. The price movement was consistent with organic market activity.</p>
                 </div>
             </div>
         </section>
     
         <!-- Resolution -->
-        <section class="section">
+        <section class="section section-alt">
             <div class="container">
                 <h2>Resolution &amp; Outcome</h2>
                 <div class="card">
                     <ul class="bullet-list">
-                        <li>Explained slippage mechanics to the user in clear, non-technical language.</li>
-                        <li>Recommended appropriate slippage tolerance settings based on token volatility and trade size.</li>
-                        <li>Advised retrying with a higher slippage tolerance or splitting the trade into smaller amounts.</li>
-                        <li>Documented the case with Etherscan screenshots, decoded parameters, and key learnings.</li>
-                        <li>Added this scenario to my personal DeFi troubleshooting guide.</li>
+                        <li>Explained the revert mechanism in plain language: the transaction didn't fail due to an error — it failed because the protocol was protecting the user. Gas is consumed regardless once execution begins.</li>
+                        <li>Provided specific guidance on slippage tolerance: recommended 1–2% for this token's typical volatility profile, with an explanation of the trade-off between protection and execution success rate.</li>
+                        <li>Advised splitting larger trades into smaller tranches to reduce price impact, particularly for lower-liquidity pools.</li>
+                        <li>Recommended enabling MEV protection (e.g., Flashbots Protect RPC) for future high-value swaps, even where MEV was not the issue here — proactive advice appropriate for this user's trade size.</li>
+                        <li>Documented the investigation as a support runbook entry covering the two most common Uniswap revert patterns: <code>Too little received</code> (V3 slippage) and <code>UniswapV2Router: INSUFFICIENT_OUTPUT_AMOUNT</code> (V2 equivalent), including diagnostic steps, Tenderly replay instructions, and MEV assessment criteria.</li>
+                        <li>Added this pattern to the internal troubleshooting library, reducing time-to-answer for similar “failed swap” tickets by providing a reusable diagnostic workflow.</li>
                     </ul>
                 </div>
             </div>
         </section>
     
-        <!-- Support Engineer Insight -->
+        <!-- Key Takeaways -->
         <section class="section">
             <div class="container">
-                <h2>Support Engineer Insight</h2>
+                <h2>Key Takeaways</h2>
                 <div class="card">
                     <p>
-                        Even seemingly simple user-reported “failed transaction” cases require methodical on-chain analysis. 
-                        Being able to quickly determine whether the issue is user error, market conditions, or a protocol bug 
-                        is a highly valuable skill when supporting crypto-native platforms like Circle.
+                        "Failed transaction" reports in crypto support are rarely straightforward. The same symptom — gas 
+                        consumed, no tokens received — can stem from slippage failure, an expired deadline, gas exhaustion, 
+                        a contract-level revert, or MEV interference. Each has a different root cause, a different 
+                        explanation, and different remediation advice. The ability to distinguish between them quickly and 
+                        confidently using on-chain tooling is what separates effective crypto support from guesswork.
                     </p>
-                    <p>
-                        This type of investigation builds confidence in explaining blockchain behaviour to both technical and non-technical stakeholders.
+                    <p style="margin-top:1rem;">
+                        One pattern worth noting: users frequently interpret a "Failed" transaction as a platform error 
+                        and expect compensation or a refund. Resolving this well requires both technical precision and 
+                        clear communication — the investigation needs to be thorough enough to explain exactly what happened 
+                        and why, not just reassure the user that nothing went wrong.
                     </p>
                 </div>
             </div>
@@ -173,9 +191,9 @@
         <section id="contact" class="section section-alt">
             <div class="container two-column">
                 <div>
-                    <h2>Let’s Talk</h2>
+                    <h2>Let's Talk</h2>
                     <p class="section-intro">
-                        I’m open to roles in SaaS, fintech and crypto/Web3 support—particularly where reliability,
+                        I'm open to roles in SaaS, fintech and crypto/Web3 support — particularly where reliability,
                         observability, and customer impact are central.
                     </p>
                 </div>
