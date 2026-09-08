@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blockchain Failure Troubleshooting Guide | John Beedles</title>
+
+    <!-- Modular CSS -->
+    <link rel="stylesheet" href="core.css">
+    <link rel="stylesheet" href="components.css">
+    <link rel="stylesheet" href="pages.css">
+
+    <style>
+        /* ── Troubleshooting card grid ── */
+        .tsg-section { margin-bottom: 2.5rem; }
+        .tsg-section:last-child { margin-bottom: 0; }
+
+        .tsg-section-label {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--color-text-tertiary, #9ca3af);
+            margin-bottom: 1rem;
+            padding-left: 2px;
+        }
+
+        .tsg-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+
+        /* Card shell - inherits site .card border-radius and shadow */
+        .tsg-card {
+            background: var(--color-surface, #fff);
+            border: 1px solid var(--color-border, #e5e7eb);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .tsg-card-head {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 14px 16px 12px;
+            border-bottom: 1px solid var(--color-border, #e5e7eb);
+        }
+
+        .tsg-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 16px;
+        }
+
+        .tsg-cause-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--color-text-primary, #111827);
+            margin: 0 0 5px;
+            line-height: 1.35;
+        }
+
+        .tsg-cause-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        .tsg-chip {
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .tsg-body { padding: 14px 16px 16px; }
+
+        .tsg-sub {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+            margin: 0 0 8px;
+            display: block;
+        }
+
+        .tsg-steps {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 14px;
+        }
+
+        .tsg-steps li {
+            display: flex;
+            gap: 9px;
+            font-size: 13px;
+            color: var(--color-text-secondary, #374151);
+            line-height: 1.55;
+            margin-bottom: 7px;
+        }
+
+        .tsg-steps li:last-child { margin-bottom: 0; }
+
+        .tsg-num {
+            width: 19px;
+            height: 19px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 700;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .tsg-steps li em {
+            font-style: normal;
+            color: var(--color-text-primary, #111827);
+            font-weight: 600;
+        }
+
+        .tsg-divider {
+            border: none;
+            border-top: 1px solid var(--color-border, #e5e7eb);
+            margin: 12px 0;
+        }
+
+        /* ── Colour themes ── */
+
+        /* Amber - pending */
+        .amber .tsg-icon  { background: #FEF3C7; color: #92400E; }
+        .amber .tsg-chip  { background: #FEF3C7; color: #92400E; }
+        .amber .tsg-sub.id { color: #B45309; }
+        .amber .tsg-num   { background: #FEF3C7; color: #92400E; }
+
+        /* Red - failed */
+        .red .tsg-icon  { background: #FEE2E2; color: #991B1B; }
+        .red .tsg-chip  { background: #FEE2E2; color: #991B1B; }
+        .red .tsg-sub.id { color: #B91C1C; }
+        .red .tsg-num   { background: #FEE2E2; color: #991B1B; }
+
+        /* Blue - wrong network */
+        .blue .tsg-icon  { background: #DBEAFE; color: #1E40AF; }
+        .blue .tsg-chip  { background: #DBEAFE; color: #1E40AF; }
+        .blue .tsg-sub.id { color: #1D4ED8; }
+        .blue .tsg-num   { background: #DBEAFE; color: #1E40AF; }
+
+        /* Purple - confirmation delays */
+        .purple .tsg-icon  { background: #EDE9FE; color: #5B21B6; }
+        .purple .tsg-chip  { background: #EDE9FE; color: #5B21B6; }
+        .purple .tsg-sub.id { color: #6D28D9; }
+        .purple .tsg-num   { background: #EDE9FE; color: #5B21B6; }
+
+        /* Green - resolve steps (all themes share this) */
+        .tsg-sub.fix  { color: #065F46; }
+        .tsg-num.fix  { background: #D1FAE5; color: #065F46; }
+
+        /* Dark mode */
+        @media (prefers-color-scheme: dark) {
+            .tsg-card { background: var(--color-surface-dark, #1f2937); border-color: var(--color-border-dark, #374151); }
+            .tsg-card-head { border-color: var(--color-border-dark, #374151); }
+            .tsg-divider   { border-color: var(--color-border-dark, #374151); }
+
+            .amber .tsg-icon  { background: #451A03; color: #FCD34D; }
+            .amber .tsg-chip  { background: #451A03; color: #FCD34D; }
+            .amber .tsg-sub.id { color: #FCD34D; }
+            .amber .tsg-num   { background: #451A03; color: #FCD34D; }
+
+            .red .tsg-icon  { background: #450A0A; color: #FCA5A5; }
+            .red .tsg-chip  { background: #450A0A; color: #FCA5A5; }
+            .red .tsg-sub.id { color: #FCA5A5; }
+            .red .tsg-num   { background: #450A0A; color: #FCA5A5; }
+
+            .blue .tsg-icon  { background: #1E3A5F; color: #BFDBFE; }
+            .blue .tsg-chip  { background: #1E3A5F; color: #BFDBFE; }
+            .blue .tsg-sub.id { color: #BFDBFE; }
+            .blue .tsg-num   { background: #1E3A5F; color: #BFDBFE; }
+
+            .purple .tsg-icon  { background: #2E1065; color: #DDD6FE; }
+            .purple .tsg-chip  { background: #2E1065; color: #DDD6FE; }
+            .purple .tsg-sub.id { color: #DDD6FE; }
+            .purple .tsg-num   { background: #2E1065; color: #DDD6FE; }
+
+            .tsg-sub.fix  { color: #6EE7B7; }
+            .tsg-num.fix  { background: #064E3B; color: #6EE7B7; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="site-wrapper">
+
+        <!-- Header -->
+        <header class="site-header">
+            <div class="container header-container">
+                <div class="logo">
+                    <span class="logo-mark">JB</span>
+                    <span class="logo-text">John Beedles</span>
+                </div>
+                <nav class="nav">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="cv.html" class="nav-link">CV</a>
+                    <a href="portfolio.html" class="nav-link active">Portfolio</a>
+                    <a href="#contact" class="nav-link">Contact</a>
+                </nav>
+            </div>
+        </header>
+
+        <main>
+
+        <!-- Hero -->
+        <section class="hero">
+            <div class="container hero-container">
+                <div class="hero-content">
+                    <h1 class="hero-title">
+                        Support Reference: Blockchain Failures<br>
+                        <span class="hero-highlight">Identification &amp; Resolution Guide</span>
+                    </h1>
+
+                    <p class="hero-subtitle">
+                        A structured troubleshooting reference covering the ten most common on-chain failure patterns 
+                        across fintech, payments, and Web3 platforms - from stuck pending transactions through to 
+                        confirmation delays and wrong-network deposits. Each card documents the exact diagnostic steps 
+                        and resolution approach I apply as a senior support engineer.
+                    </p>
+
+                    <div class="hero-actions">
+                        <a href="portfolio.html" class="btn btn-primary">Back to Portfolio</a>
+                    </div>
+
+                    <div class="hero-meta">
+                        <span>On-Chain Debugging</span>
+                        <span>DeFi &amp; Stablecoin Support</span>
+                        <span>Gas &amp; Mempool Analysis</span>
+                        <span>Incident Triage</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Overview -->
+        <section class="section">
+            <div class="container two-column">
+
+                <!-- LEFT -->
+                <div>
+                    <h2>About This Reference</h2>
+                    <p class="section-intro">
+                        "Failed transaction" and "missing funds" reports are among the most common - and most 
+                        misunderstood - issues in crypto and Web3 support. The same symptom can have a dozen different 
+                        root causes, each requiring a different diagnostic approach and a different resolution. This 
+                        guide documents the structured methodology I apply to each failure class, covering identification, 
+                        triage, and resolution steps with the precision expected at senior level.
+                    </p>
+
+                    <h3>What This Demonstrates</h3>
+                    <ul class="bullet-list">
+                        <li>Structured, repeatable diagnostic methodology for on-chain failures</li>
+                        <li>Depth of knowledge across EVM transaction lifecycle, gas mechanics, and finality</li>
+                        <li>Ability to triage quickly using block explorers, gas trackers, and trace tools</li>
+                        <li>Clear separation between user error, integration error, and chain-level conditions</li>
+                        <li>Communication approach: setting expectations and explaining complex behaviour plainly</li>
+                    </ul>
+                </div>
+
+                <!-- RIGHT -->
+                <div class="card">
+                    <h3>Failure Categories Covered</h3>
+                    <ul class="bullet-list">
+                        <li><strong>Transaction Pending</strong> - low gas price, network congestion, validator delays</li>
+                        <li><strong>Transaction Failed</strong> - insufficient funds, contract revert, gas exhaustion, invalid parameters</li>
+                        <li><strong>Wrong Network</strong> - chain mismatch, testnet/production environment errors</li>
+                        <li><strong>Confirmation Delays</strong> - congestion at confirmation layer, validator issues, reorg protection</li>
+                    </ul>
+
+                    <h3 style="margin-top:1.5rem;">Tools &amp; Methods Referenced</h3>
+                    <ul class="bullet-list">
+                        <li>Etherscan, Basescan, Polygonscan (block explorers)</li>
+                        <li>Tenderly (transaction simulation &amp; trace)</li>
+                        <li>Etherscan Gas Tracker, Blocknative (mempool &amp; gas)</li>
+                        <li>eth_estimateGas, eth_gasPrice (RPC methods)</li>
+                        <li>EIP-1559 fee model &amp; mempool replacement rules</li>
+                        <li>ERC-20 allowance model, ERC-4337 account abstraction</li>
+                    </ul>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ═══ SECTION 1: TRANSACTION PENDING ═══ -->
+        <section class="section section-alt">
+            <div class="container">
+                <h2>Transaction Pending</h2>
+                <p class="section-intro">
+                    A transaction in the pending state has been broadcast to the network but not yet included in a block. 
+                    The cause determines whether action is needed - and how urgently.
+                </p>
+
+                <div class="tsg-section">
+                    <div class="tsg-grid">
+
+                        <!-- Card 1: Low gas price -->
+                        <div class="tsg-card amber">
+                            <div class="tsg-card-head">
+                                <div class="tsg-icon">⛽</div>
+                                <div>
+                                    <p class="tsg-cause-title">Low gas price set by user</p>
+                                    <div class="tsg-cause-chips">
+                                        <span class="tsg-chip">on-chain</span>
+                                        <span class="tsg-chip">user config</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tsg-body">
+                                <span class="tsg-sub id">Identify</span>
+                                <ul class="tsg-steps">
+                                    <li><span class="tsg-num">1</span><span>Get the <em>transaction hash</em> from the customer and look it up on the relevant block explorer (Etherscan, Basescan, Polygonscan, etc.)</span></li>
+                                    <li><span class="tsg-num">2</span><span>Check the <em>gas price paid</em> on the transaction detail page and compare it against the current network base fee using a gas tracker (e.g. Etherscan Gas Tracker)</span></li>
+                                    <li><span class="tsg-num">3</span><span>Confirm the transaction status shows <em>Pending</em> - not Failed - which distinguishes a queued transaction from a reverted one</span></li>
+                                    <li><span class="tsg-num">4</span><span>Ask the customer which wallet or integration submitted the transaction and whether they set a <em>custom gas price</em> manually rather than using the wallet's recommended estimate</span></li>
+                                </ul>
+                                <hr class="tsg-divider">
+                                <span class="tsg-sub fix">Resolve</span>
+                                <ul class="tsg-steps">
+                                    <li><span class="tsg-num fix">1</span><span>Advise the customer to use the <em>Speed Up</em> function in their wallet (MetaMask, Rabby, etc.) - this resubmits the transaction at a higher gas price using the same nonce, replacing the stuck one</span></li>
+                                    <li><span class="tsg-num fix">2</span><span>If no speed-up option exists, they can submit a <em>zero-value self-transfer</em> to their own address with the same nonce and a higher gas price - this cancels and replaces the pending transaction</span></li>
+                                    <li><span class="tsg-num fix">3</span><span>For programmatically submitted transactions, resubmit with an updated <em>maxFeePerGas</em> (EIP-1559) or <em>gasPrice</em> (legacy) at least 10% higher than the original - the minimum increment required for a replacement to be accepted by the mempool</span></li>
+                                    <li><span class="tsg-num fix">4</span><span>Confirm the replacement transaction is mined and the original is <em>dropped from the mempool</em> - the block explorer and wallet should both reflect the updated status</span></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Card 2: Network congestion -->
+                        <div class="tsg-card amber">
+                            <div class="tsg-card-head">
+                                <div class="tsg-icon">📈</div>
+                                <div>
+                                    <p class="tsg-cause-title">Network congestion</p>
+                                    <div class="tsg-cause-chips">
+                                        <span class="tsg-chip">on-chain</span>
+                                        <span class="tsg-chip">external</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tsg-body">
+                                <span class="tsg-sub id">Identify</span>
+                                <ul class="tsg-steps">
+                                    <li><span class="tsg-num">1</span><span>Check a <em>gas tracker</em> (Etherscan Gas Tracker, Blocknative) - confirm the network base fee is elevated versus the gas price the customer paid</span></li>
+                                    <li><span class="tsg-num">2</span><span>Check the <em>mempool size</em> - a large backlog of pending transactions confirms network congestion rather than a configuration error on the customer's side</span></li>
+                                    <li><span class="tsg-num">3</span><span>Check whether <em>other customers</em> are reporting the same delay on the same chain - broad impact raises triage priority and shifts the root cause to external</span></li>
+                                    <li><span class="tsg-num">4</span><span>Check the <em>platform or chain status page</em> for any active incidents or elevated congestion notices affecting that network</span></li>
+                                </ul>
+                                <hr class="tsg-divider">
+                                <span class="tsg-sub fix">Resolve</span>
+                                <ul class="tsg-steps">
+                                    <li><span class="tsg-num fix">1</span><span>Inform the customer this is a <em>network-level condition</em>, not a wallet or platform issue - set realistic expectations about resolution timeline</span></li>
+                                    <li><span class="tsg-num fix">2</span><span>Advise them to <em>wait</em> if the use case is not time-sensitive - congestion typically resolves within minutes to a few hours as demand normalises</span></li>
+                                    <li><span class="tsg-num fix">3</span><span>If urgent, advise using the <em>speed-up / replace</em> flow with a gas price at or above the current recommended fast level from the gas tracker</span></li>
+                                    <li><span class="tsg-num fix">4</span><span>For future transactions, recommend enabling <em>dynamic gas pricing</em> in their integration (e.g. EIP-1559 fee estimation) rather than hardcoding a gas value</span></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Card 3: Validator delays -->
+                        <div class="tsg-card amber">
+                            <div class="tsg-card-head">
+                                <div class="tsg-icon">🖥️</div>
+                                <div>
+                                    <p class="tsg-cause-title">Validator delays</p>
+                                    <div class="tsg-cause-chips">
+                                        <span class="tsg-chip">on-chain</span>
+                                        <span class="tsg-chip">infrastructure</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tsg-body">
+                                <span class="tsg-sub id">Identify</span>
+                                <ul class="tsg-steps">
+                                    <li><span class="tsg-num">1</span><span>Check the <em>block explorer</em> - is block production slowing down or stopping? Compare recent block timestamps against the chain's normal block cadence</span></li>
+                                    <li><span class="tsg-num">2</span><span>Check the <em>chain's official status channels</em> (e.g. Ethereum Foundation blog, Base status page, respective Discord/X accounts) for reported validator or consensus layer incidents</span></li>
+                                    <li><span class="tsg-num">3</span><span>Confirm the transaction <em>has been broadcast</em> and is visible in the mempool - if not appearing on the explorer at all, the issue may be at the RPC broadcast layer, not validators</span></li>
+                                    <li><span class="tsg-num">4</span><span>Review whether transactions across <em>multiple different senders</em> are stuck - chain-wide impact confirms a validator issue rather than an isolated configuration problem</span></li>
+                                </ul>
+                                <hr class="tsg-divider">
+                                <span class="tsg-sub fix">Resolve</span>
+                                <ul class="tsg-steps">
+                                    <li><span class="tsg-num fix">1</span><span>Set customer expectations clearly - validator delays are <em>external infrastructure issues</em> outside the platform's control, dependent on the chain's own recovery</span></li>
+                                    <li><span class="tsg-num fix">2</span><span>Monitor block production - once validators recover, <em>pending transactions process in order</em> based on gas price, with no customer action typically required</span></li>
+                                    <li><span class="tsg-num fix">3</span><span>If the transaction was submitted via an RPC endpoint, try <em>rebroadcasting via a different RPC provider</em> (Alchemy, Infura, QuickNode) in case the original node is degraded or lagging</span></li>
+                                    <li><span class="tsg-num fix">4</span><span>Escalate internally if any platform-operated infrastructure (RPC nodes, indexers, attestation services) is impacted alongside the validator issue</span></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══ SECTION 2: TRANSACTION FAILED ═══ -->
+        <section class="section">
+            <div class="container">
+                <h2>Transaction Failed</h2>
+                <p class="section-intro">
+                    A failed transaction has been included in a block but reverted during execution - gas is consumed 
+                    regardless. The revert reason is the primary diagnostic signal. Each failure class has a distinct 
+                    cause and a distinct fix.
+                </p>
+
+                <div class="tsg-section">
+                    <div class="tsg-grid">
+
+                        <!-- Card 4: Insufficient funds -->
+                        <div class="tsg-card red">
+                            <div class="tsg-card-head">
+                                <div class="tsg-icon">👛</div>
+                                <div>
+                                    <p class="tsg-cause-title">Insufficient funds</p>
+                                    <div class="tsg-cause-chips">
+                                        <span class="tsg-chip">wallet</span>
+                                        <span class="tsg-chip">user error</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tsg-body">
+                                <span class="tsg-sub id">Identify</span>
+                                <ul class="tsg-steps">
+                                    <li><span class="tsg-num">1</span><span>Look up the <em>wallet address</em> on the block explorer and check its current token balance (e.g. USDC) and native gas token balance (ETH, MATIC, SOL, etc.) separately</span></li>
+                                    <li><span class="tsg-num">2</span><span>Confirm the transaction <em>failure reason</em> - the explorer should show "Fail" with a revert reason or a pre-execution rejection indicating insufficient balance</span></li>
+                                    <li><span class="tsg-num">3</span><span>Determine whether funds are missing for the <em>transfer amount</em>, the <em>gas fee</em>, or both - these are distinct balances; holding USDC does not cover ETH gas costs</span></li>
+                                    <li><span class="tsg-num">4</span><span>If the transaction involves a <em>fiat on-ramp or minting step</em>, confirm the upstream deposit was fully settled before the on-chain action was attempted</span></li>
+                                </ul>
+                                <hr class="tsg-divider">
+                                <span class="tsg-sub fix">Resolve</span>
+                                <ul class="tsg-steps">
+                                    <li><span class="tsg-num fix">1</span><span>If the token balance is short: advise the customer to <em>top up their wallet</em> with the required amount before retrying</span></li>
+                                    <li><span class="tsg-num fix">2</span><span>If the native gas token is short: the customer must <em>fund the wallet with ETH, MATIC, or the relevant gas token</em> - stablecoins alone cannot pay gas on standard EVM chains</span></li>
+                                    <li><span class="tsg-num fix">3</span><span>If the platform uses <em>gas abstraction or a paymaster</em> (e.g. ERC-4337 account abstraction), verify the gas policy is correctly configured so end-users don't need to hold native tokens</span></li>
+                                    <li><span class="tsg-num fix">4</span><span>Once funded, advise the customer to <em>retry the transaction</em> - if the platform uses idempotency keys, a new key must be issued for the retry</span></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Card 5: Smart contract revert -->
+                        <div class="tsg-card red">
+                            <div class="tsg-card-head">
+                                <div class="tsg-icon">📄</div>
+                                <div>
+                                    <p class="tsg-cause-title">Smart contract revert</p>
+                                    <div class="tsg-cause-chips">
+                                        <span class="tsg-chip">smart contract</span>
+                                        <span class="tsg-chip">on-chain</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tsg-body">
+                                <span class="tsg-sub id">Identify</span>
+                                <ul class="tsg-steps">
+                                    <li><span class="tsg-num">1</span><span>Find the transaction on the block explorer - look for the <em>revert reason string</em> in the transaction detail (e.g. "ERC20: transfer amount exceeds allowance", "Ownable: caller is not the owner")</span></li>
+                                    <li><span class="tsg-num">2</span><span>If the revert reason is ABI-encoded hex, use a <em>decoder tool</em> such as Tenderly or Etherscan's built-in decoder to extract the human-readable error message</span></li>
+                                    <li><span class="tsg-num">3</span><span>Identify which <em>contract and function</em> triggered the revert - was it the token contract, the platform's own contract, or the customer's integration contract?</span></li>
+                                    <li><span class="tsg-num">4</span><span>Check whether a required <em>ERC-20 token approval (allowance)</em> step was skipped - contracts cannot transfer tokens on a user's behalf without an explicit prior approve() call</span></li>
+                                </ul>
+                                <hr class="tsg-divider">
+                                <span class="tsg-sub fix">Resolve</span>
+                                <ul class="tsg-steps">
+                                    <li><span class="tsg-num fix">1</span><span>Share the decoded revert reason with the customer - most standard revert strings are <em>self-explanatory</em> and map directly to a fixable integration issue</span></li>
+                                    <li><span class="tsg-num fix">2</span><span>If the revert is an allowance error: the customer must call <em>approve(spenderAddress, amount)</em> on the token contract before the transfer call - this is a deliberate two-transaction ERC-20 design</span></li>
+                                    <li><span class="tsg-num fix">3</span><span>If the revert originates inside a <em>platform contract</em>, escalate with the transaction hash, decoded revert reason, and chain ID - this may indicate a contract bug or access control misconfiguration</span></li>
+                                    <li><span class="tsg-num fix">4</span><span>Advise the customer to <em>simulate the corrected transaction</em> using Tenderly before resubmitting, to confirm the fix works without spending additional gas on another failure</span></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Card 6: Gas exhausted -->
+                        <div class="tsg-card red">
+                            <div class="tsg-card-head">
+                                <div class="tsg-icon">🔥</div>
+                                <div>
+                                    <p class="tsg-cause-title">Gas exhausted (out-of-gas)</p>
+                                    <div class="tsg-cause-chips">
+                                        <span class="tsg-chip">gas limit</span>
+                                        <span class="tsg-chip">configuration</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tsg-body">
+                                <span class="tsg-sub id">Identify</span>
+                                <ul class="tsg-steps">
+                                    <li><span class="tsg-num">1</span><span>On the block explorer, check <em>Gas Used vs Gas Limit</em> on the failed transaction - if gas used equals the gas limit exactly, the transaction ran out of gas mid-execution</span></li>
+                                    <li><span class="tsg-num">2</span><span>Distinguish an out-of-gas failure from a <em>logic revert</em> - both show as "Failed", but out-of-gas consumes the full gas limit while a logic revert typically returns unused gas</span></li>
+                                    <li><span class="tsg-num">3</span><span>Ask whether the customer set a <em>custom gas limit</em> manually, or relied on an eth_estimateGas RPC call - estimates can under-predict for state-heavy operations</span></li>
+                                    <li><span class="tsg-num">4</span><span>Check whether the contract being called was <em>recently upgraded or has complex logic</em> - changes that increase computation or storage writes require a higher gas limit than before</span></li>
+                                </ul>
+                                <hr class="tsg-divider">
+                                <span class="tsg-sub fix">Resolve</span>
+                                <ul class="tsg-steps">
+                                    <li><span class="tsg-num fix">1</span><span>Advise the customer to <em>increase the gas limit</em> - apply a 20–50% buffer above the eth_estimateGas return value, since estimates can fall short for complex state changes</span></li>
+                                    <li><span class="tsg-num fix">2</span><span>Recommend calling <em>eth_estimateGas</em> with the exact calldata and sender address before each submission - this gives a more accurate baseline than a hardcoded value</span></li>
+                                    <li><span class="tsg-num fix">3</span><span>If the integration uses a <em>paymaster or gas abstraction layer</em>, verify the gas policy ceiling is high enough to accommodate the operation's actual consumption</span></li>
+                                    <li><span class="tsg-num fix">4</span><span>Retry with the corrected gas limit - the original failed transaction <em>cannot be recovered</em> and gas paid is not refunded, as the network performed work up to the point of exhaustion</span></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Card 7: Invalid parameters -->
+                        <div class="tsg-card red">
+                            <div class="tsg-card-head">
+                                <div class="tsg-icon">⚠️</div>
+                                <div>
+                                    <p class="tsg-cause-title">Invalid parameters</p>
+                                    <div class="tsg-cause-chips">
+                                        <span class="tsg-chip">API / integration</span>
+                                        <span class="tsg-chip">user error</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tsg-body">
+                                <span class="tsg-sub id">Identify</span>
+                                <ul class="tsg-steps">
+                                    <li><span class="tsg-num">1</span><span>Review the <em>API request payload</em> or transaction calldata - look for malformed addresses, incorrect token decimal values, or missing required fields</span></li>
+                                    <li><span class="tsg-num">2</span><span>Check the <em>API error response body</em> - well-formed APIs return structured 400-series errors with field-level validation messages that pinpoint the exact problem</span></li>
+                                    <li><span class="tsg-num">3</span><span>Verify the <em>destination address format</em> - EVM addresses are 42 hex characters (0x + 40 hex digits); Solana addresses are base58-encoded and a different length entirely</span></li>
+                                    <li><span class="tsg-num">4</span><span>Confirm the <em>chain ID</em> in the request matches the chain the wallet and token actually exist on - submitting to the wrong chain ID is a common integration mistake</span></li>
+                                </ul>
+                                <hr class="tsg-divider">
+                                <span class="tsg-sub fix">Resolve</span>
+                                <ul class="tsg-steps">
+                                    <li><span class="tsg-num fix">1</span><span>Share the specific <em>validation error message</em> with the customer and map it to the relevant field in the API documentation</span></li>
+                                    <li><span class="tsg-num fix">2</span><span>Verify USDC amounts use the <em>correct decimal precision</em> - USDC uses 6 decimals on EVM chains, so 1 USDC must be submitted as 1,000,000 in raw token units (not 18 decimals like ETH)</span></li>
+                                    <li><span class="tsg-num fix">3</span><span>Advise the customer to <em>validate inputs client-side</em> before submission - including EVM address checksum validation (EIP-55) and amount sanity checks</span></li>
+                                    <li><span class="tsg-num fix">4</span><span>Once corrected, resubmit with a <em>new idempotency key</em> if the platform uses them, to avoid a collision with the original failed request</span></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══ SECTION 3: WRONG NETWORK ═══ -->
+        <section class="section section-alt">
+            <div class="container">
+                <h2>Wrong Network</h2>
+                <p class="section-intro">
+                    Chain and environment mismatches are the most common onboarding failure in Web3 support. 
+                    Funds are rarely lost - but they require methodical identification to locate and recover.
+                </p>
+
+                <div class="tsg-section">
+                    <div class="tsg-grid">
+
+                        <!-- Card 8: Chain mismatch -->
+                        <div class="tsg-card blue">
+                            <div class="tsg-card-head">
+                                <div class="tsg-icon">🔀</div>
+                                <div>
+                                    <p class="tsg-cause-title">Funds sent to address on wrong chain</p>
+                                    <div class="tsg-cause-chips">
+                                        <span class="tsg-chip">chain mismatch</span>
+                                        <span class="tsg-chip">user error</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tsg-body">
+                                <span class="tsg-sub id">Identify</span>
+                                <ul class="tsg-steps">
+                                    <li><span class="tsg-num">1</span><span>Ask the customer to confirm <em>which chain they sent from</em> and which chain the recipient was expecting - these are often assumed rather than verified</span></li>
+                                    <li><span class="tsg-num">2</span><span>Look up the destination address on <em>both chain explorers</em> - if USDC arrived on Base but the recipient is checking Ethereum mainnet, the funds are present but on a different chain</span></li>
+                                    <li><span class="tsg-num">3</span><span>Confirm whether the destination wallet or exchange <em>supports the source chain</em> - many centralised exchange deposit addresses only accept one specific network</span></li>
+                                    <li><span class="tsg-num">4</span><span>Check whether the receiving platform <em>auto-detects multi-chain deposits</em> - some platforms credit cross-chain deposits automatically after a delay, making manual recovery unnecessary</span></li>
+                                </ul>
+                                <hr class="tsg-divider">
+                                <span class="tsg-sub fix">Resolve</span>
+                                <ul class="tsg-steps">
+                                    <li><span class="tsg-num fix">1</span><span>If the recipient controls the private key: they can <em>connect their wallet to the correct chain</em> - the same address exists across all EVM-compatible chains, so funds are accessible once the wallet is pointed at the right network</span></li>
+                                    <li><span class="tsg-num fix">2</span><span>If the recipient is a centralised exchange: advise contacting <em>the exchange's support team</em> directly - many can manually credit cross-chain deposits, though this can take days and is not guaranteed</span></li>
+                                    <li><span class="tsg-num fix">3</span><span>For future transfers, the customer should use an <em>official cross-chain bridge</em> (e.g. CCTP for USDC, or the destination chain's canonical bridge) rather than sending directly across chains</span></li>
+                                    <li><span class="tsg-num fix">4</span><span>Advise the customer to <em>always verify the network</em> a deposit address supports before sending - on-chain transfers are irreversible once confirmed</span></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Card 9: Testnet in production -->
+                        <div class="tsg-card blue">
+                            <div class="tsg-card-head">
+                                <div class="tsg-icon">🧪</div>
+                                <div>
+                                    <p class="tsg-cause-title">Testnet credentials used in production</p>
+                                    <div class="tsg-cause-chips">
+                                        <span class="tsg-chip">environment mismatch</span>
+                                        <span class="tsg-chip">config error</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tsg-body">
+                                <span class="tsg-sub id">Identify</span>
+                                <ul class="tsg-steps">
+                                    <li><span class="tsg-num">1</span><span>Confirm which <em>API environment</em> the request was made against - check whether a sandbox or testnet API key was used when the customer intended to operate in production</span></li>
+                                    <li><span class="tsg-num">2</span><span>Look up the wallet or contract address on both a <em>mainnet and testnet block explorer</em> - a balance or history appearing on Sepolia (chain ID: 11155111) but not mainnet (chain ID: 1) confirms an environment mismatch</span></li>
+                                    <li><span class="tsg-num">3</span><span>Check the <em>chain ID</em> in the request payload - Ethereum mainnet is 1, Sepolia testnet is 11155111; a mismatch definitively confirms the wrong environment was targeted</span></li>
+                                    <li><span class="tsg-num">4</span><span>Review the API base URL and credentials in the customer's configuration - sandbox and production environments use <em>distinct API keys and base URLs</em> that must not be mixed</span></li>
+                                </ul>
+                                <hr class="tsg-divider">
+                                <span class="tsg-sub fix">Resolve</span>
+                                <ul class="tsg-steps">
+                                    <li><span class="tsg-num fix">1</span><span>Confirm the customer has <em>production API credentials</em> - if they have only used a sandbox environment, they may need to complete onboarding steps before production access is granted</span></li>
+                                    <li><span class="tsg-num fix">2</span><span>Ensure the correct <em>production API base URL</em> is configured - sandbox and production endpoints are different and must match the credentials being used</span></li>
+                                    <li><span class="tsg-num fix">3</span><span>Audit the customer's config for <em>hardcoded testnet chain IDs, contract addresses, or RPC endpoints</em> - all must be replaced with mainnet equivalents before going live</span></li>
+                                    <li><span class="tsg-num fix">4</span><span>Recommend using <em>environment variables</em> rather than hardcoded values throughout the integration - this prevents environment-specific config from bleeding across deployment stages</span></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══ SECTION 4: CONFIRMATION DELAYS ═══ -->
+        <section class="section">
+            <div class="container">
+                <h2>Confirmation Delays</h2>
+                <p class="section-intro">
+                    Confirmation delays occur after a transaction has been successfully included in a block. 
+                    The transaction is not lost - it is waiting for the platform's required confirmation 
+                    threshold to be reached before funds are credited. Understanding the cause determines 
+                    whether any action is possible.
+                </p>
+
+                <div class="tsg-section">
+                    <div class="tsg-grid">
+
+                        <!-- Card 10a: Congestion at confirmation layer -->
+                        <div class="tsg-card purple">
+                            <div class="tsg-card-head">
+                                <div class="tsg-icon">⏸️</div>
+                                <div>
+                                    <p class="tsg-cause-title">Network congestion (confirmation layer)</p>
+                                    <div class="tsg-cause-chips">
+                                        <span class="tsg-chip">finality</span>
+                                        <span class="tsg-chip">external</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tsg-body">
+                                <span class="tsg-sub id">Identify</span>
+                                <ul class="tsg-steps">
+                                    <li><span class="tsg-num">1</span><span>Verify the transaction <em>has been included in a block</em> - check the block explorer for a confirmed block number. If included, the delay is at the confirmation stage, not at broadcast</span></li>
+                                    <li><span class="tsg-num">2</span><span>Check <em>how many confirmations have accumulated</em> versus the threshold required by the receiving platform - different platforms set different thresholds per chain</span></li>
+                                    <li><span class="tsg-num">3</span><span>Compare the current <em>block time</em> against the chain's normal average - congestion can slow block production on some chains, extending the time between confirmations</span></li>
+                                    <li><span class="tsg-num">4</span><span>Confirm whether the delay affects <em>all transactions on that chain</em> or just this one - chain-wide slow confirmations indicate congestion; an isolated delay may point to a different cause</span></li>
+                                </ul>
+                                <hr class="tsg-divider">
+                                <span class="tsg-sub fix">Resolve</span>
+                                <ul class="tsg-steps">
+                                    <li><span class="tsg-num fix">1</span><span>Reassure the customer that the transaction is <em>permanently in the chain</em> - once included in a block it cannot disappear, it is simply waiting for the required confirmation count</span></li>
+                                    <li><span class="tsg-num fix">2</span><span>Set clear expectations - share the platform's <em>confirmation threshold for that chain</em> and an estimated wait time based on current block times</span></li>
+                                    <li><span class="tsg-num fix">3</span><span>No action is required from the customer - confirmation accumulation is <em>fully automatic</em> once the transaction is in a block</span></li>
+                                    <li><span class="tsg-num fix">4</span><span>For future high-priority transactions, advise setting a <em>higher gas price</em> during congestion periods to get faster block inclusion and start accumulating confirmations sooner</span></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Card 10b: Validator issues -->
+                        <div class="tsg-card purple">
+                            <div class="tsg-card-head">
+                                <div class="tsg-icon">⚙️</div>
+                                <div>
+                                    <p class="tsg-cause-title">Validator issues</p>
+                                    <div class="tsg-cause-chips">
+                                        <span class="tsg-chip">consensus layer</span>
+                                        <span class="tsg-chip">infrastructure</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tsg-body">
+                                <span class="tsg-sub id">Identify</span>
+                                <ul class="tsg-steps">
+                                    <li><span class="tsg-num">1</span><span>Check the chain's <em>validator participation rate</em> - Ethereum requires at least two-thirds (≥66.67%) of validators to attest for the chain to finalise; below this threshold, finality stalls</span></li>
+                                    <li><span class="tsg-num">2</span><span>Check the chain's <em>official status channels</em> (Ethereum Foundation, Base status page, Arbitrum status page, etc.) for reported consensus layer incidents</span></li>
+                                    <li><span class="tsg-num">3</span><span>Look at the <em>block production rate</em> on the explorer - significant gaps between blocks or a high rate of missed slots are indicators of validator participation issues</span></li>
+                                    <li><span class="tsg-num">4</span><span>Confirm whether an <em>internal incident</em> has been raised for the affected chain - check whether any platform-operated RPC or indexing infrastructure is also impacted</span></li>
+                                </ul>
+                                <hr class="tsg-divider">
+                                <span class="tsg-sub fix">Resolve</span>
+                                <ul class="tsg-steps">
+                                    <li><span class="tsg-num fix">1</span><span>Communicate clearly to the customer that this is a <em>chain-level issue outside the platform's control</em> - share public status links so they can monitor progress independently</span></li>
+                                    <li><span class="tsg-num fix">2</span><span>Monitor the chain - once validator participation recovers, <em>finality resumes automatically</em> and pending confirmations accumulate without customer action</span></li>
+                                    <li><span class="tsg-num fix">3</span><span>If the outage is prolonged, assess whether an <em>alternative supported chain</em> is available for the customer's use case (e.g. Base or Arbitrum in place of Ethereum mainnet)</span></li>
+                                    <li><span class="tsg-num fix">4</span><span>Escalate to engineering if any platform-operated infrastructure (RPC nodes, indexers, attestation services) is affected alongside the validator issue</span></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Card 10c: Reorg protection -->
+                        <div class="tsg-card purple">
+                            <div class="tsg-card-head">
+                                <div class="tsg-icon">🛡️</div>
+                                <div>
+                                    <p class="tsg-cause-title">Reorg protection waiting periods</p>
+                                    <div class="tsg-cause-chips">
+                                        <span class="tsg-chip">finality</span>
+                                        <span class="tsg-chip">by design</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tsg-body">
+                                <span class="tsg-sub id">Identify</span>
+                                <ul class="tsg-steps">
+                                    <li><span class="tsg-num">1</span><span>Confirm the transaction has been <em>included in a block</em> but the downstream system (exchange, payment platform, custody provider) has not yet credited it</span></li>
+                                    <li><span class="tsg-num">2</span><span>Check the receiving platform's <em>required confirmation count</em> for that chain - thresholds vary significantly by chain and platform (12 confirmations on Ethereum mainnet is a common standard; L2s typically require fewer)</span></li>
+                                    <li><span class="tsg-num">3</span><span>Verify the <em>current confirmation count</em> on the block explorer and calculate how many remain - this allows you to give the customer a concrete estimated wait time based on current block cadence</span></li>
+                                    <li><span class="tsg-num">4</span><span>Distinguish a waiting period from a <em>genuine chain reorganisation</em> - if the block containing the transaction has been replaced, the transaction returns to pending status and the block explorer will reflect this</span></li>
+                                </ul>
+                                <hr class="tsg-divider">
+                                <span class="tsg-sub fix">Resolve</span>
+                                <ul class="tsg-steps">
+                                    <li><span class="tsg-num fix">1</span><span>Explain to the customer that this is <em>expected, intentional behaviour</em> - confirmation thresholds exist to protect against chain reorganisations, which can reverse recently-included transactions on some chains</span></li>
+                                    <li><span class="tsg-num fix">2</span><span>Provide the customer with the <em>exact confirmation count required</em> and an estimated time to completion based on current average block times for that chain</span></li>
+                                    <li><span class="tsg-num fix">3</span><span>If a genuine reorg has occurred: the transaction will <em>automatically reprocess</em> once re-included in the canonical chain - manual resubmission is not required in most cases</span></li>
+                                    <li><span class="tsg-num fix">4</span><span>For latency-sensitive use cases, advise evaluating <em>chains with faster finality</em> (Base, Arbitrum, Solana) where confirmation requirements and block times are lower by design</span></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Takeaways -->
+        <section class="section section-alt">
+            <div class="container">
+                <h2>Key Takeaways</h2>
+                <div class="card">
+                    <p>
+                        The most important triage skill in crypto support is resisting the urge to jump to a resolution 
+                        before correctly identifying the failure class. "Gas consumed, no tokens received" is the symptom 
+                        for at least five different root causes - each with a different explanation and a different fix. 
+                        Getting this wrong erodes customer trust and wastes engineering time.
+                    </p>
+                    <p style="margin-top:1rem;">
+                        Two patterns come up repeatedly and are worth internalising: first, token balance and gas balance 
+                        are completely separate - a wallet full of USDC can still fail to execute a transaction if it 
+                        holds no ETH. Second, wrong-network deposits are rarely lost; they almost always require the 
+                        recipient to connect their wallet to the correct chain, or to contact the exchange. Setting that 
+                        expectation clearly and calmly is as important as the technical diagnosis itself.
+                    </p>
+                    <p style="margin-top:1rem;">
+                        Confirmation delays and reorg protection waiting periods are by design - not bugs. Being able 
+                        to explain that distinction clearly, provide an exact confirmation count and estimated wait time, 
+                        and communicate calmly under customer pressure is the mark of strong senior support.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        </main>
+
+        <!-- Contact -->
+        <section id="contact" class="section section-alt">
+            <div class="container two-column">
+                <div>
+                    <h2>Let's Talk</h2>
+                    <p class="section-intro">
+                        I'm open to roles in SaaS, fintech and crypto/Web3 support - particularly where reliability,
+                        observability, and customer impact are central.
+                    </p>
+                </div>
+                <div class="contact-block">
+                    <p><strong>Email:</strong> <a href="mailto:johnbeedles@gmail.com">johnbeedles@gmail.com</a></p>
+                    <p><strong>Location:</strong> Bournemouth, United Kingdom</p>
+                    <p><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/john-beedles-a428b3139" target="_blank">View Profile</a></p>
+                </div>
+            </div>
+        </section>
+
+        <footer class="site-footer">
+            <div class="container footer-container">
+                <p>© <span id="year"></span> John Beedles. All rights reserved.</p>
+            </div>
+        </footer>
+
+    </div>
+
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>

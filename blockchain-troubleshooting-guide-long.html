@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blockchain Support: On-Chain Failure Troubleshooting Guide | John Beedles</title>
+
+    <!-- Modular CSS -->
+    <link rel="stylesheet" href="core.css">
+    <link rel="stylesheet" href="components.css">
+    <link rel="stylesheet" href="pages.css">
+</head>
+<body>
+
+    <div class="site-wrapper">
+
+        <!-- Header -->
+        <header class="site-header">
+            <div class="container header-container">
+                <div class="logo">
+                    <span class="logo-mark">JB</span>
+                    <span class="logo-text">John Beedles</span>
+                </div>
+                <nav class="nav">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="cv.html" class="nav-link">CV</a>
+                    <a href="portfolio.html" class="nav-link active">Portfolio</a>
+                    <a href="#contact" class="nav-link">Contact</a>
+                </nav>
+            </div>
+        </header>
+
+        <main>
+
+        <!-- Hero -->
+        <section class="hero">
+            <div class="container hero-container">
+                <div class="hero-content">
+                    <h1 class="hero-title">
+                        Blockchain Support Reference<br>
+                        <span class="hero-highlight">On-Chain Failure Troubleshooting Guide</span>
+                    </h1>
+
+                    <p class="hero-subtitle">
+                        A practical support engineer reference covering the most common on-chain failure patterns —
+                        from pending and failed transactions through to nonce conflicts, API-layer async failures,
+                        confirmation delays, and compliance escalation. Each failure mode includes structured
+                        identification steps and a clear resolution path, built from hands-on blockchain
+                        infrastructure support experience.
+                    </p>
+
+                    <div class="hero-actions">
+                        <a href="portfolio.html" class="btn btn-primary">Back to Portfolio</a>
+                    </div>
+
+                    <div class="hero-meta">
+                        <span>Blockchain Troubleshooting</span>
+                        <span>On-Chain Debugging</span>
+                        <span>Gas &amp; Nonce Analysis</span>
+                        <span>Transaction Lifecycle</span>
+                        <span>EVM / USDC</span>
+                        <span>Webhooks &amp; Async</span>
+                        <span>Compliance Escalation</span>
+                        <span>Observability</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- What Makes Blockchain Support Different -->
+        <section class="section section-alt">
+            <div class="container">
+                <h2>What Makes Blockchain Support Different</h2>
+                <p class="section-intro">
+                    Blockchain support is distributed-systems debugging with financial stakes and irreversible
+                    state changes. That combination produces failure patterns and investigation requirements
+                    that don't appear in traditional SaaS support environments.
+                </p>
+                <div class="two-column">
+                    <div class="card">
+                        <h3>Unique Challenges</h3>
+                        <ul class="bullet-list">
+                            <li><strong>Transactions are irreversible.</strong> A misdirected payment or an incorrectly advised retry cannot be recalled. Every action recommendation carries direct financial risk for the customer.</li>
+                            <li><strong>Failure states are layered.</strong> "Transaction not arrived" could mean API rejection, broadcast failure, mempool drop, on-chain revert, confirmation delay, platform processing lag, or compliance hold - each with a different fix. Jumping to solutions before identifying the layer compounds the problem.</li>
+                            <li><strong>Finality is a spectrum, not a binary.</strong> A transaction included in a block is not automatically settled. Short reorgs can orphan recently included blocks. Platform credit thresholds exist precisely because "included" and "settled" are different states.</li>
+                            <li><strong>The same wallet address means different things on different chains.</strong> An EVM address on Ethereum and the identical address string on Base are entirely separate accounts. Chain ID verification is as important as address verification.</li>
+                            <li><strong>Block explorers represent chain state - they are not chain state.</strong> Explorers index the chain and can lag by seconds to minutes. Stale indexing, RPC provider divergence, and mempool inconsistencies between nodes mean a single explorer view is a representation, not the source of truth.</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>How This Changes the Support Approach</h3>
+                        <ul class="bullet-list">
+                            <li><strong>Establish the failure layer before acting.</strong> API layer, broadcast layer, mempool, on-chain execution, or confirmation and settlement - the answer changes everything about what comes next.</li>
+                            <li><strong>Gather on-chain evidence independently.</strong> Do not rely solely on what the customer reports or what the application layer logged. Verify the transaction hash directly on the chain and cross-reference with structured logs and distributed traces.</li>
+                            <li><strong>Know when not to advise action.</strong> A confirming transaction should not be resubmitted. A compliance-held transaction should not be retried. Incorrect advice at these moments directly damages the customer.</li>
+                            <li><strong>Distinguish platform failures from chain failures.</strong> Validators going offline, network congestion, and reorgs are outside platform control. Webhook failures, RPC degradation, and API bugs are not. The escalation path and customer communication differ entirely.</li>
+                            <li><strong>Compliance intersects with operations.</strong> Not every stuck transaction is a technical failure. Sanctions screening holds, AML-triggered pauses, and fraud flags produce states that look like technical errors but require a fundamentally different response.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Overview -->
+        <section class="section">
+            <div class="container two-column">
+
+                <!-- LEFT -->
+                <div>
+                    <h2>About This Guide</h2>
+                    <p class="section-intro">
+                        This reference organises common blockchain support failure patterns by category, with
+                        step-by-step identification and resolution guidance for each. It reflects a structured
+                        investigation approach built on layer identification, evidence gathering, and operational
+                        discipline - establishing what the chain actually recorded before forming any hypothesis
+                        about what went wrong.
+                    </p>
+                    <p class="section-intro" style="margin-top:1rem;">
+                        Real-world blockchain support investigations are frequently messier than clean documentation
+                        suggests: RPC providers return conflicting state, explorers lag behind the live chain,
+                        async webhooks arrive out of order, and nonce gaps stall entire transaction queues
+                        silently. The sections below are written with that operational reality in mind.
+                    </p>
+
+                    <h3 style="margin-top:1.5rem;">What This Guide Covers</h3>
+                    <ul class="bullet-list">
+                        <li><strong>Transaction Pending</strong> - low gas, network congestion, validator delays</li>
+                        <li><strong>Nonce &amp; Mempool Complexity</strong> - nonce gaps, replacement failures, RPC inconsistencies</li>
+                        <li><strong>Transaction Failed</strong> - insufficient funds, smart contract reverts, gas exhausted, invalid parameters</li>
+                        <li><strong>Wrong Network</strong> - chain mismatches, environment (testnet vs production) errors</li>
+                        <li><strong>API-Layer &amp; Async Failures</strong> - rate limiting, webhooks, async job states, reconciliation</li>
+                        <li><strong>Confirmation Delays</strong> - congestion at the confirmation layer, validator issues, reorg protection</li>
+                        <li><strong>Compliance &amp; Security Escalation</strong> - screening holds, fraud flags, compromised wallets</li>
+                    </ul>
+                </div>
+
+                <!-- RIGHT -->
+                <div class="card">
+                    <h3>Skills Demonstrated</h3>
+                    <ul class="bullet-list">
+                        <li>On-chain transaction debugging and internal trace analysis</li>
+                        <li>Block explorer investigation (Etherscan, Basescan, Tenderly)</li>
+                        <li>Gas mechanics, EIP-1559 fee model, and nonce management</li>
+                        <li>ERC-20 token standard and smart contract interaction patterns</li>
+                        <li>Multi-chain environment triage (EVM chains, chain ID verification)</li>
+                        <li>Webhook delivery debugging and event signature validation</li>
+                        <li>Distributed tracing, correlation ID tracking, and structured log analysis</li>
+                        <li>Async processing, eventual consistency, and reconciliation debugging</li>
+                        <li>Compliance escalation awareness and operational boundary identification</li>
+                        <li>Structured root cause analysis and engineering escalation quality</li>
+                    </ul>
+
+                    <h3 style="margin-top:1.5rem;">Reference Tools</h3>
+                    <ul class="bullet-list">
+                        <li>Etherscan / Basescan / Solscan - on-chain state verification</li>
+                        <li>Tenderly - transaction simulation, revert decoding, internal traces</li>
+                        <li>Postman - API reproduction with sanitised payloads</li>
+                        <li>Splunk / Datadog - structured log correlation and distributed trace analysis</li>
+                        <li>Gas trackers - real-time base fee and mempool congestion monitoring</li>
+                        <li>Chain status pages and validator participation dashboards</li>
+                    </ul>
+
+                    <h3 style="margin-top:1.5rem;">Key Concepts</h3>
+                    <ul class="bullet-list">
+                        <li>Transaction lifecycle: sign &rarr; broadcast &rarr; mempool &rarr; validate &rarr; include &rarr; confirm &rarr; finalise</li>
+                        <li>Gas: base fee + priority tip; limit vs price; EIP-1559 vs legacy</li>
+                        <li>Nonce: sequential per-address counter; gaps stall all subsequent transactions</li>
+                        <li>Finality: Ethereum requires 2/3 supermajority validator attestation (~66.7%)</li>
+                        <li>USDC: 6 decimal places on EVM chains (1 USDC = 1,000,000 raw units)</li>
+                        <li>Explorer lag: explorers index chain data - they represent state, they do not define it</li>
+                    </ul>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ─────────────────────────────────────────────────── -->
+        <!-- SECTION 1 - TRANSACTION PENDING                    -->
+        <!-- ─────────────────────────────────────────────────── -->
+        <section class="section section-alt">
+            <div class="container">
+                <h2>Transaction Pending</h2>
+                <p class="section-intro">
+                    A pending transaction has been broadcast to the network but not yet included in a confirmed
+                    block. Always verify the transaction is visible on the block explorer first - a transaction
+                    with no explorer record has not been successfully broadcast and requires a different
+                    investigation path (RPC failure, signing error, or submission error) than the scenarios below.
+                </p>
+
+                <div class="card" style="margin-bottom:1.5rem;">
+                    <h3>Low Gas Price Set by User</h3>
+                    <div class="two-column" style="margin-top:1rem;">
+                        <div>
+                            <h4>Identify</h4>
+                            <ul class="bullet-list">
+                                <li>Get the <code>transaction hash</code> from the customer and look it up on the relevant block explorer (Etherscan, Basescan, etc.)</li>
+                                <li>Check the <strong>gas price paid</strong> in the transaction detail and compare against the current network base fee via a gas tracker - a paid price below the current base fee confirms the cause</li>
+                                <li>Confirm the status shows <strong>Pending</strong> - not Failed. Pending means queued but not executed; Failed means it reached the chain and was rejected. Different states, different fixes</li>
+                                <li>Ask whether the customer set a custom gas price manually, or used a hardcoded value that was valid at integration time but has since become stale relative to current network conditions</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4>Resolve</h4>
+                            <ul class="bullet-list">
+                                <li>Advise the customer to use their wallet's <strong>speed up</strong> function, which re-broadcasts the transaction with a higher gas price at the same nonce, replacing the original in the mempool</li>
+                                <li>If no speed-up option exists, submit a <strong>zero-value self-transfer at the same nonce</strong> with a higher gas price to displace the stuck transaction</li>
+                                <li>For API-submitted transactions, resubmit with <strong>maxFeePerGas / gasPrice at least 10&ndash;12.5% higher</strong> than the original (Geth requires 10% minimum; 12.5% is the safer cross-client standard)</li>
+                                <li>Confirm the replacement is accepted and the original dropped. Also verify the customer has not introduced a nonce gap in the process - see the Nonce &amp; Mempool section below</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-bottom:1.5rem;">
+                    <h3>Network Congestion</h3>
+                    <div class="two-column" style="margin-top:1rem;">
+                        <div>
+                            <h4>Identify</h4>
+                            <ul class="bullet-list">
+                                <li>Check a <strong>gas tracker</strong> - confirm the current network base fee is significantly higher than the gas price the customer's transaction used</li>
+                                <li>Check the <strong>mempool size</strong>: a large backlog of pending transactions confirms network-wide congestion rather than a user-specific misconfiguration</li>
+                                <li>Check whether <strong>multiple customers</strong> on the same chain are reporting similar delays at the same timestamp - broad impact confirms congestion is the cause</li>
+                                <li>Note that different RPC providers may report different mempool sizes - if one provider shows normal conditions, check a secondary provider before ruling congestion out</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4>Resolve</h4>
+                            <ul class="bullet-list">
+                                <li>Communicate clearly that this is a <strong>network-level condition</strong>, not a platform or wallet issue, and set realistic expectations based on current mempool depth</li>
+                                <li>Advise the customer to <strong>wait</strong> if the use case is not time-sensitive - congestion typically resolves within minutes to a few hours</li>
+                                <li>If urgency requires action, advise the <strong>speed-up / replace flow</strong> with a gas price at or above the network's current recommended fast level, not the average</li>
+                                <li>Recommend enabling <strong>dynamic gas pricing</strong> in future integrations - hardcoded gas prices are the root cause of the majority of user-originated pending transaction issues</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Validator Delays</h3>
+                    <div class="two-column" style="margin-top:1rem;">
+                        <div>
+                            <h4>Identify</h4>
+                            <ul class="bullet-list">
+                                <li>Check the block explorer for <strong>block production rate</strong> - compare recent block timestamps against the chain's normal cadence; gaps of multiple times the expected block time indicate a validator-layer issue</li>
+                                <li>Check the chain's <strong>official status page or community channels</strong> for reported consensus or validator incidents</li>
+                                <li>Confirm the transaction <strong>is visible on the explorer</strong> - if there is no record at all, the issue is at the RPC broadcast layer, not validators</li>
+                                <li>Check whether the delay affects <strong>multiple senders and wallets</strong> - this distinguishes a validator issue from a nonce gap or user-specific problem that coincidentally occurs during a slow block</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4>Resolve</h4>
+                            <ul class="bullet-list">
+                                <li>Communicate that validator delays are <strong>external infrastructure</strong> - no user-side action will accelerate block production</li>
+                                <li>Once validators recover, <strong>pending transactions process in nonce order</strong> automatically - resubmission is generally not required and risks creating nonce conflicts</li>
+                                <li>If submitted via a specific RPC endpoint, try <strong>rebroadcasting through a different RPC provider</strong> - node-level degradation can sometimes be mistaken for broader validator issues</li>
+                                <li>Escalate to engineering if platform-operated infrastructure (RPC nodes, relay services) is affected - distinguish clearly between chain-level and platform-level impact in the escalation note</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ─────────────────────────────────────────────────── -->
+        <!-- SECTION 2 - NONCE & MEMPOOL COMPLEXITY             -->
+        <!-- ─────────────────────────────────────────────────── -->
+        <section class="section">
+            <div class="container">
+                <h2>Nonce &amp; Mempool Complexity</h2>
+                <p class="section-intro">
+                    Nonce and mempool issues are among the most common causes of silently stalled transaction
+                    queues in production wallet infrastructure, and one of the most frequently misdiagnosed.
+                    Because the symptom looks identical to network congestion or low gas, the nonce state must
+                    always be verified independently before advising any retry or replacement action.
+                </p>
+
+                <div class="card" style="margin-bottom:1.5rem;">
+                    <h3>Nonce Gaps</h3>
+                    <div class="two-column" style="margin-top:1rem;">
+                        <div>
+                            <h4>Identify</h4>
+                            <ul class="bullet-list">
+                                <li>Query the wallet address using <code>eth_getTransactionCount</code> to retrieve the <strong>on-chain nonce</strong>, then compare against the nonce of the stuck transaction - if there is a gap between the two, no transactions will be processed until it is filled</li>
+                                <li>If a pending transaction has a nonce <strong>higher than the on-chain expected nonce</strong> and no transaction fills the gap, the network will not process the queued transaction regardless of gas price</li>
+                                <li>Check whether a <strong>previous transaction was dropped</strong> from the mempool without being replaced - transactions can be silently evicted by nodes after extended pending periods, particularly on congested networks, without any notification to the sender</li>
+                                <li>In high-throughput wallet infrastructure, check whether <strong>parallel transaction submission with non-sequential nonce assignment</strong> caused the gap - common in automated payment pipelines submitting multiple transactions concurrently</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4>Resolve</h4>
+                            <ul class="bullet-list">
+                                <li>Fill the gap by submitting a <strong>transaction at the missing nonce</strong> - a zero-value self-transfer is sufficient if no real operation is needed at that position, purely to unblock the queue</li>
+                                <li>Before submitting the gap-filler, confirm the <strong>dropped transaction is no longer pending on multiple RPC providers</strong> - acting on stale data from a single node is a common source of double-submission errors</li>
+                                <li>Once the gap is filled and confirmed, <strong>subsequent transactions should process in sequence</strong> without further intervention - monitor the queue to confirm the backlog drains</li>
+                                <li>For automated pipelines, advise implementing <strong>nonce management with a per-wallet locking mechanism</strong> to prevent concurrent submissions from creating gaps under load</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-bottom:1.5rem;">
+                    <h3>Replacement Transaction Failures &amp; RPC Inconsistency</h3>
+                    <div class="two-column" style="margin-top:1rem;">
+                        <div>
+                            <h4>Identify</h4>
+                            <ul class="bullet-list">
+                                <li>If a replacement transaction returns a <strong>"replacement transaction underpriced"</strong> error, the bump did not meet the minimum threshold - the original is still pending and the replacement was rejected outright</li>
+                                <li>Check whether the customer is querying <strong>different RPC providers</strong> for nonce and pending state - providers can have divergent mempool views, causing a transaction to appear dropped on one endpoint while still live on another</li>
+                                <li>If a transaction appears replaced successfully but the original later confirms, <strong>both transactions were submitted at the same nonce</strong> - check both hashes on the explorer to determine which was included and which orphaned</li>
+                                <li>Watch for <strong>nonce reuse errors</strong> in the API response - these indicate the customer's nonce tracking is out of sync with on-chain state, typically caused by a failed transaction that did not advance the nonce as expected</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4>Resolve</h4>
+                            <ul class="bullet-list">
+                                <li>For underpriced replacement errors: resubmit with <strong>at least 12.5% higher gas price</strong> than the current pending transaction - not the original submission, as prior replacement attempts may have already raised the effective price</li>
+                                <li>For RPC inconsistency: verify pending state across <strong>at least two independent RPC providers</strong> before advising any replacement - acting on stale data from a single node is a consistent source of double-submission incidents</li>
+                                <li>If both a replacement and original have confirmed: <strong>do not advise further retries</strong>. Escalate with both transaction hashes - the operations team needs to determine which is canonical and whether reconciliation is required</li>
+                                <li>For nonce tracking issues in automated systems, resynchronise by calling <strong><code>eth_getTransactionCount</code> with the <code>pending</code> parameter</strong> before the next submission, and implement per-wallet nonce locking going forward</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>In Practice: A Realistic Nonce Incident</h3>
+                    <p>
+                        A typical production nonce incident does not present as a clean single failure. A more
+                        realistic pattern: a customer reports three transactions submitted in quick succession
+                        have been pending for 45 minutes. The block explorer shows all three as pending. Gas
+                        prices look reasonable. The network is not congested.
+                    </p>
+                    <p style="margin-top:1rem;">
+                        Querying <code>eth_getTransactionCount</code> reveals the on-chain nonce is two behind
+                        the first of the three visible transactions. A transaction submitted earlier that day —
+                        not mentioned by the customer - was silently dropped from the mempool after an RPC
+                        provider restart. The customer's wallet continued incrementing nonces locally, unaware
+                        that the dropped transaction left a gap. All three visible transactions are valid and
+                        correctly priced, but none will process until the gap nonce is filled.
+                    </p>
+                    <p style="margin-top:1rem;">
+                        The resolution is a zero-value gap-filler at the missing nonce, followed by monitoring
+                        to confirm the queue drains in order. The investigation took longer than expected
+                        because the dropped transaction appeared in no log the customer could access - only
+                        the on-chain nonce query exposed it. This is why nonce state must always be checked
+                        independently, not inferred from what the customer reports.
+                    </p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ─────────────────────────────────────────────────── -->
+        <!-- SECTION 3 - TRANSACTION FAILED                     -->
+        <!-- ─────────────────────────────────────────────────── -->
+        <section class="section section-alt">
+            <div class="container">
+                <h2>Transaction Failed</h2>
+                <p class="section-intro">
+                    A failed transaction has been broadcast, reached the chain, and been rejected at execution
+                    time. Unlike a pending transaction, this status is final for that submission - it will not
+                    retry automatically. Identifying the specific failure reason is critical before advising
+                    any action, as the resolution path differs significantly between the cases below. Do not
+                    advise resubmission until the root cause is confirmed.
+                </p>
+
+                <div class="card" style="margin-bottom:1.5rem;">
+                    <h3>Insufficient Funds</h3>
+                    <div class="two-column" style="margin-top:1rem;">
+                        <div>
+                            <h4>Identify</h4>
+                            <ul class="bullet-list">
+                                <li>Look up the <strong>wallet address</strong> on the block explorer and check its current token balance (e.g. USDC) and native gas token balance (ETH, MATIC, etc.) separately - either can independently cause failure</li>
+                                <li>Confirm the <strong>failure reason</strong> in the transaction detail - should show a transfer-exceeds-balance or out-of-funds error. Some explorers surface this inline; others require Tenderly to decode</li>
+                                <li>Determine whether the shortfall is in the <strong>transfer amount</strong>, the <strong>gas fee</strong>, or both - a customer can hold significant stablecoin while having insufficient native token for gas, producing an identical failure signature</li>
+                                <li>For payment platform flows, check whether the <strong>fiat deposit was received and settled on-chain</strong> before the operation was triggered - settlement timing mismatches are a common cause of apparently unexplained shortfalls</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4>Resolve</h4>
+                            <ul class="bullet-list">
+                                <li>If the token balance is short: advise the customer to <strong>fund the wallet</strong> with the required amount and confirm the deposit has settled before retrying</li>
+                                <li>If the native gas token is short: the customer must <strong>top up with the native token</strong> - holding stablecoins alone is not sufficient to pay gas without an active gas abstraction layer</li>
+                                <li>For platforms using <strong>gas abstraction or paymasters</strong>, verify the gas policy is active, correctly scoped to this wallet, and has sufficient credit before advising retry</li>
+                                <li>Once funded, retry with a <strong>new idempotency key</strong> if using a platform API - reusing the original request ID can return a cached failure response depending on platform implementation</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-bottom:1.5rem;">
+                    <h3>Smart Contract Revert</h3>
+                    <div class="two-column" style="margin-top:1rem;">
+                        <div>
+                            <h4>Identify</h4>
+                            <ul class="bullet-list">
+                                <li>Find the transaction on the block explorer and check for a <strong>revert reason string</strong> (e.g. <code>ERC20: transfer amount exceeds allowance</code>). Not all explorers surface this - use Tenderly if the reason is absent</li>
+                                <li>If the revert reason is ABI-encoded hex, use <strong>Tenderly's revert decoder</strong> or Etherscan's built-in ABI decoder to extract the human-readable message before sharing with the customer</li>
+                                <li>Identify <strong>which contract and function</strong> reverted - token contract, third-party protocol, or platform-owned contract? This determines whether the fix is in the customer's integration or requires internal escalation</li>
+                                <li>Check whether a required <strong>ERC-20 token approval was skipped</strong> - a prior <code>approve()</code> call is required when transferring tokens via a third-party contract. This is the single most common smart contract revert in production integrations</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4>Resolve</h4>
+                            <ul class="bullet-list">
+                                <li>Share the <strong>decoded revert reason</strong> with the customer and link to the relevant documentation requirement - most standard ERC-20 revert reasons are self-explanatory once decoded</li>
+                                <li>If the revert is an allowance issue: the customer must call <strong><code>approve(spenderAddress, amount)</code></strong> on the token contract first - this is a separate on-chain transaction that must be confirmed before retrying the transfer</li>
+                                <li>Advise the customer to <strong>simulate the corrected transaction in Tenderly</strong> before resubmitting - this validates the fix without spending gas and surfaces any secondary revert conditions before they hit production</li>
+                                <li>If the revert is inside <strong>platform-owned contracts</strong>, do not ask the customer to retry. Escalate to engineering with the transaction hash, decoded revert reason, and chain ID - this is a potential platform bug</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-bottom:1.5rem;">
+                    <h3>Gas Exhausted</h3>
+                    <div class="two-column" style="margin-top:1rem;">
+                        <div>
+                            <h4>Identify</h4>
+                            <ul class="bullet-list">
+                                <li>On the block explorer, compare <strong>Gas Used against Gas Limit</strong> - if Gas Used equals Gas Limit exactly, the transaction ran out of gas mid-execution. This is the most reliable diagnostic signal for OOG failure</li>
+                                <li>Confirm this is OOG rather than a revert - reverts typically consume less than the full limit (the EVM halts at the revert opcode). Gas Used equals Gas Limit means OOG; Gas Used significantly below Gas Limit means revert</li>
+                                <li>Ask whether the customer set a <strong>custom gas limit</strong> or relied on an unmodified <code>eth_estimateGas</code> result. Estimates are calculated against current chain state at estimation time - if state changes between estimation and submission, the estimate may be insufficient</li>
+                                <li>Check whether the target contract has been <strong>recently upgraded</strong> - proxy contracts can increase gas requirements significantly after an upgrade, invalidating previously working limits</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4>Resolve</h4>
+                            <ul class="bullet-list">
+                                <li>Advise the customer to <strong>increase the gas limit</strong> - a common starting point is 1.2&ndash;1.5&times; the <code>eth_estimateGas</code> result, providing buffer for state-dependent gas variation</li>
+                                <li>Recommend calling <strong><code>eth_estimateGas</code> with the exact calldata</strong> immediately before each submission rather than caching an estimate - gas requirements for the same operation can vary between blocks</li>
+                                <li>If using a <strong>gas abstraction layer or paymaster</strong>, verify the gas ceiling in the policy is sufficient for the current operation - policies set at integration time may not account for contract upgrades</li>
+                                <li>Note clearly that gas paid on the failed transaction <strong>is not refunded</strong> - the EVM performed computation up to the exhaustion point. The customer must submit a fresh transaction with the corrected limit</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Invalid Parameters</h3>
+                    <div class="two-column" style="margin-top:1rem;">
+                        <div>
+                            <h4>Identify</h4>
+                            <ul class="bullet-list">
+                                <li>Review the <strong>API request payload or transaction calldata</strong> for malformed values - wrong address formats, incorrect token decimal precision, missing required fields, or zero-value amounts where non-zero is required</li>
+                                <li>Check the <strong>platform API error response body</strong> - 400-series errors from well-designed APIs include field-level validation messages that identify the offending parameter directly</li>
+                                <li>Verify the <strong>destination address format</strong> - EVM addresses are exactly 42 characters (0x prefix + 40 hex characters). Wrong length, non-hex characters, or missing 0x prefix all produce identical error messages despite being different errors</li>
+                                <li>Confirm the <strong>chain ID</strong> matches the chain where the wallet and token exist - a chain ID mismatch sometimes produces an "invalid address" error rather than a "wrong chain" error, which misdirects initial diagnosis</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4>Resolve</h4>
+                            <ul class="bullet-list">
+                                <li>Share the specific <strong>validation error and field reference</strong> with the customer and link to the relevant API documentation section</li>
+                                <li>Verify token amounts use <strong>correct decimal precision</strong>: USDC uses 6 decimal places on EVM chains (1 USDC = <code>1000000</code> raw units). Submitting amounts using 18 decimals - as used by ETH and many other tokens - is a very common integration error</li>
+                                <li>Advise adding <strong>client-side address validation</strong> including EIP-55 checksum verification before submission - catching format errors before they reach the API reduces round-trip debugging time significantly</li>
+                                <li>Once corrected, resubmit with a <strong>new idempotency key</strong> - reusing the original key may return a cached error response depending on how the platform handles idempotency for validation failures</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ─────────────────────────────────────────────────── -->
+        <!-- SECTION 4 - WRONG NETWORK                          -->
+        <!-- ─────────────────────────────────────────────────── -->
+        <section class="section">
+            <div class="container">
+                <h2>Wrong Network</h2>
+                <p class="section-intro">
+                    Wrong network errors are among the most disorienting for customers because the transaction
+                    often succeeds technically - funds arrive somewhere, just not where intended. The key
+                    operational insight is that the same wallet address exists independently on every EVM chain,
+                    so assets sent to the wrong chain are not lost - they are at the correct address on the
+                    wrong network. Recovery depends entirely on who controls the destination address.
+                </p>
+
+                <div class="card" style="margin-bottom:1.5rem;">
+                    <h3>Sending to an Address on the Wrong EVM Chain</h3>
+                    <div class="two-column" style="margin-top:1rem;">
+                        <div>
+                            <h4>Identify</h4>
+                            <ul class="bullet-list">
+                                <li>Ask the customer to confirm <strong>which chain they sent from</strong> and which chain the recipient expected to receive on - do not assume these match based on the customer's initial description</li>
+                                <li>Look up the destination address on <strong>both chain explorers independently</strong> - confirm assets arrived on the source chain and check whether any balance exists on the chain the recipient was expecting</li>
+                                <li>Confirm whether the destination <strong>wallet, exchange, or platform supports</strong> the source chain - many exchange deposit addresses accept only one specific chain and the network does not reject sends from other chains at the protocol level</li>
+                                <li>Check whether the receiving platform offers <strong>automatic multi-chain deposit detection</strong> - some platforms credit cross-chain deposits after a manual review period; always check this before advising a bridge-based recovery</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4>Resolve</h4>
+                            <ul class="bullet-list">
+                                <li>If the recipient controls the address: they can <strong>add the source chain to their wallet</strong> and access the assets immediately - the same EOA address is valid on all EVM chains and the private key controls it on each</li>
+                                <li>If the recipient is a centralised exchange: advise contacting the <strong>exchange's support team</strong> - many will manually credit cross-chain deposits, though the process can take days and success is not guaranteed for all chains</li>
+                                <li>If exchange recovery is unavailable, the customer may need an <strong>official, audited cross-chain bridge</strong> - always advise using only the chain's officially recommended bridge, as unofficial bridges carry significant security risk</li>
+                                <li>For future prevention: advise the customer to <strong>always verify the chain tag</strong> shown on an exchange deposit address before sending. This error cannot be reversed by the sending platform</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Testnet Credentials or Addresses Used in Production</h3>
+                    <div class="two-column" style="margin-top:1rem;">
+                        <div>
+                            <h4>Identify</h4>
+                            <ul class="bullet-list">
+                                <li>Confirm which <strong>API environment</strong> the request targeted - sandbox keys submitted against production endpoints consistently produce 401 errors; this is the most common symptom</li>
+                                <li>Look up the wallet or contract address on a <strong>testnet block explorer</strong> (Sepolia Etherscan) - a balance present on testnet but not mainnet confirms the customer has been working in the wrong environment. Note: Goerli reached End of Life in January 2024 and is fully decommissioned; Sepolia is the current standard testnet</li>
+                                <li>Check the <strong>chain ID</strong> in the request payload - Ethereum mainnet is chain ID <code>1</code>; Sepolia testnet is <code>11155111</code>. A mismatch here definitively confirms environment confusion</li>
+                                <li>Confirm which environment the customer <strong>believes they are targeting</strong> versus which they are actually hitting - the gap between these two answers is often wider than expected</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4>Resolve</h4>
+                            <ul class="bullet-list">
+                                <li>Confirm the customer has a <strong>production API key</strong> - sandbox-only customers must complete production onboarding before live transactions are permitted</li>
+                                <li>Ensure the customer is using the correct <strong>production API base URL</strong> - sandbox and production environments use different base URLs; keys are not cross-compatible</li>
+                                <li>Audit the customer's config for <strong>hardcoded testnet chain IDs, contract addresses, or RPC endpoints</strong> - all must be replaced with mainnet equivalents. Testnet contracts are not deployed on mainnet</li>
+                                <li>Recommend <strong>environment variables</strong> for all chain IDs, contract addresses, RPC URLs, and API credentials - hardcoded values are the primary cause of testnet/production confusion at deployment</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ─────────────────────────────────────────────────── -->
+        <!-- SECTION 5 - API-LAYER & ASYNC FAILURES             -->
+        <!-- ─────────────────────────────────────────────────── -->
+        <section class="section section-alt">
+            <div class="container">
+                <h2>API-Layer &amp; Async Failures</h2>
+                <p class="section-intro">
+                    Not all blockchain support issues originate on-chain. A significant category of failures
+                    occurs in the API and asynchronous processing layer - rate limiting, webhook delivery
+                    problems, async job state mismatches, and eventual consistency issues that cause platform
+                    state to diverge from on-chain reality. These are often harder to diagnose because they
+                    produce no transaction hash, and the customer cannot easily distinguish a platform
+                    processing issue from an on-chain one.
+                </p>
+
+                <div class="card" style="margin-bottom:1.5rem;">
+                    <h3>Rate Limiting (429 Errors)</h3>
+                    <div class="two-column" style="margin-top:1rem;">
+                        <div>
+                            <h4>Identify</h4>
+                            <ul class="bullet-list">
+                                <li>Check the <strong>HTTP response status code</strong> in the customer's API logs - a 429 confirms rate limiting rather than an authentication or validation failure</li>
+                                <li>Check the <strong>response headers</strong> - <code>Retry-After</code> and <code>X-RateLimit-*</code> headers indicate the limit type (per-second, per-minute, per-key) and the reset window. These should be the first data requested from the customer</li>
+                                <li>Identify the <strong>request pattern</strong> - burst pattern (a batch job firing all at once) or consistent throughout the day? Burst patterns suggest missing backoff logic; consistent patterns suggest volume approaching tier limits</li>
+                                <li>Check whether the customer is using a <strong>single API key across multiple services</strong> - shared keys aggregate consumption and can cause rate limiting that appears unrelated to any single service</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4>Resolve</h4>
+                            <ul class="bullet-list">
+                                <li>Advise implementing <strong>exponential backoff with jitter</strong> on all API requests - retrying immediately after a 429 sustains the rate limit violation rather than resolving it</li>
+                                <li>Recommend <strong>honouring the <code>Retry-After</code> header value</strong> rather than using a fixed retry interval - this aligns retries with the actual reset window</li>
+                                <li>For batch processing, advise <strong>spreading requests across the rate limit window</strong> with a controlled dispatch rate rather than submitting concurrently - this resolves burst-pattern 429s without a tier upgrade in most cases</li>
+                                <li>If legitimate traffic consistently exceeds the current tier, <strong>escalate to account management</strong> with documentation of the customer's request pattern and business use case</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-bottom:1.5rem;">
+                    <h3>Webhook Delivery Failures</h3>
+                    <div class="two-column" style="margin-top:1rem;">
+                        <div>
+                            <h4>Identify</h4>
+                            <ul class="bullet-list">
+                                <li>Check the <strong>platform's webhook delivery logs</strong> - confirm whether the event was dispatched, how many delivery attempts were made, what HTTP response code the customer's endpoint returned, and whether the retry queue is exhausted</li>
+                                <li>If the event shows as delivered but the customer reports non-receipt, request the <strong>customer endpoint's access logs</strong> for the delivery timestamp - the event may have been received but discarded, failed signature verification, or consumed by a different process</li>
+                                <li>Check whether the customer is performing <strong>webhook signature verification</strong> and whether it is passing - failed signature checks cause silently discarded events that are indistinguishable from undelivered events from the customer's side</li>
+                                <li>For <strong>duplicate event reports</strong>, check whether the endpoint is returning non-2xx responses intermittently - if the handler processes the event before the response is sent, platform retries produce duplicates</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4>Resolve</h4>
+                            <ul class="bullet-list">
+                                <li>For undelivered events: confirm the <strong>endpoint URL is correctly registered, publicly reachable, and returning 2xx</strong>. A temporary outage during delivery can exhaust the retry queue - check whether the event can be manually replayed from the dashboard</li>
+                                <li>For signature verification failures: confirm the customer is using the <strong>correct webhook secret, computing HMAC-SHA256 over the raw request body</strong> (not a parsed or re-serialised version), and comparing against the correct header</li>
+                                <li>For duplicate event handling: advise implementing <strong>idempotent event processing</strong> using the event ID as a deduplication key - the platform cannot guarantee exactly-once delivery; consumer-side idempotency is the correct architectural approach</li>
+                                <li>If webhook events are consistently delayed or failing across multiple customers, <strong>escalate to engineering</strong> with affected event IDs, delivery attempt logs, and timestamps - this may indicate a platform-side queue issue</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Async Job States &amp; Eventual Consistency</h3>
+                    <div class="two-column" style="margin-top:1rem;">
+                        <div>
+                            <h4>Identify</h4>
+                            <ul class="bullet-list">
+                                <li>When a customer reports a transfer as "stuck" but there is no failed transaction on-chain, check the <strong>platform's async operation status</strong> - the on-chain transaction may be confirmed while platform-side processing is still reconciling</li>
+                                <li>Compare the <strong>on-chain transaction timestamp</strong> against the platform's last status update - a significant gap indicates platform-side processing lag rather than an on-chain issue</li>
+                                <li>Check whether the customer is polling a <strong>status endpoint immediately after submission</strong> - async operations are not complete at submission time, and an "in progress" status is not a failure</li>
+                                <li>For balance discrepancies between on-chain state and platform balance, check whether a <strong>reconciliation job</strong> is scheduled or in progress - batch reconciliation platforms can show stale balances during high-volume periods</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4>Resolve</h4>
+                            <ul class="bullet-list">
+                                <li>Establish the <strong>expected processing SLA</strong> for the operation type and confirm the customer's wait time against it - do not treat an operation as failed until it exceeds the documented window</li>
+                                <li>Advise using <strong>webhooks rather than polling</strong> where the platform supports both - polling introduces race conditions with eventual consistency windows and increases unnecessary API load</li>
+                                <li>If platform state has not updated after the expected window, <strong>escalate with the on-chain transaction hash, operation ID, and timestamp</strong> - engineering can inspect the processing queue and identify whether the job has stalled</li>
+                                <li>Do not advise the customer to submit a corrective transaction to fix a balance discrepancy until reconciliation state is confirmed - submitting against a stale balance can create a double-credit or overpayment that is significantly harder to unwind</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ─────────────────────────────────────────────────── -->
+        <!-- SECTION 6 - CONFIRMATION DELAYS                    -->
+        <!-- ─────────────────────────────────────────────────── -->
+        <section class="section">
+            <div class="container">
+                <h2>Confirmation Delays</h2>
+                <p class="section-intro">
+                    Confirmation delays occur after a transaction has been included in a block but before
+                    downstream systems recognise it as settled. Confirming transactions generally require no
+                    user action - the primary support task is verifying the confirmation count is progressing
+                    and setting accurate expectations about when the threshold will be reached.
+                </p>
+
+                <div class="card" style="margin-bottom:1.5rem;">
+                    <h3>Network Congestion at the Confirmation Layer</h3>
+                    <div class="two-column" style="margin-top:1rem;">
+                        <div>
+                            <h4>Identify</h4>
+                            <ul class="bullet-list">
+                                <li>Verify the transaction <strong>has a block number on the explorer</strong> - this is the critical first check. A block number confirms the transaction is included and the delay is at the confirmation stage, not broadcast</li>
+                                <li>Check <strong>how many confirmations have accumulated</strong> versus the number required by the receiving platform - most platforms publish their thresholds, and this comparison usually resolves the customer's concern immediately</li>
+                                <li>Compare current <strong>average block time</strong> against the chain's normal cadence - slow blocks during congestion extend the real-world time between confirmations even when the count is progressing correctly</li>
+                                <li>If a single transaction appears to lag while others confirm normally, consider whether this is an <strong>explorer indexing delay</strong> rather than a genuine chain issue - querying the transaction directly via RPC can confirm whether the confirmation count is accurate</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4>Resolve</h4>
+                            <ul class="bullet-list">
+                                <li>Reassure the customer that the transaction is <strong>recorded in the chain and progressing normally</strong> - a transaction with a block number is in the canonical chain. Note that very recently included blocks can be reorganised in rare cases, but this is uncommon and self-resolving</li>
+                                <li>Share the platform's <strong>required confirmation count and an estimated completion time</strong> based on current block times - specific numbers are far more useful than a generic "please wait"</li>
+                                <li>No action is required - <strong>confirmation accumulation is automatic</strong> once the transaction is included</li>
+                                <li>For future high-priority transactions, advise setting a higher gas price during congestion windows to achieve faster inclusion, which starts the confirmation countdown sooner</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-bottom:1.5rem;">
+                    <h3>Validator Issues</h3>
+                    <div class="two-column" style="margin-top:1rem;">
+                        <div>
+                            <h4>Identify</h4>
+                            <ul class="bullet-list">
+                                <li>Check the chain's <strong>validator participation rate</strong> - Ethereum's Casper FFG mechanism requires a 2/3 supermajority (~66.7%) of validator attestations. Participation below this threshold stalls finality even when blocks continue to be produced</li>
+                                <li>Check <strong>official chain status pages and community channels</strong> for reported consensus incidents - validator issues at scale are typically announced quickly on official channels</li>
+                                <li>Look at <strong>block production rate and missed slots</strong> on the explorer - consecutive missed slots or large block time gaps are the clearest on-chain signal of a validator-layer problem</li>
+                                <li>Confirm whether the platform has raised an <strong>internal incident</strong> for the affected chain - customer-facing communications should reference this and avoid committing to restoration timelines not yet confirmed internally</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4>Resolve</h4>
+                            <ul class="bullet-list">
+                                <li>Communicate clearly that this is a <strong>chain-level issue outside platform control</strong> - share public status page links so the customer can monitor independently</li>
+                                <li>Once validators recover, <strong>finality resumes automatically</strong> - no resubmission is required, and resubmission during a validator incident risks nonce conflicts</li>
+                                <li>If the issue is prolonged, assess whether an <strong>alternative chain</strong> can temporarily serve the customer's use case - Base or Arbitrum rather than Ethereum mainnet, where applicable</li>
+                                <li>Escalate to engineering if <strong>platform infrastructure</strong> is also impacted - distinguish clearly between what is the chain's issue and what is additionally the platform's issue</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Reorg Protection Waiting Periods</h3>
+                    <div class="two-column" style="margin-top:1rem;">
+                        <div>
+                            <h4>Identify</h4>
+                            <ul class="bullet-list">
+                                <li>Confirm the transaction has a block number but the <strong>downstream platform has not yet credited it</strong> - this is the standard signature of a reorg protection hold, and it is expected behaviour, not a failure</li>
+                                <li>Check the platform's <strong>required confirmation threshold</strong> for the specific chain - thresholds vary widely (12+ on Ethereum mainnet, fewer on L2s), and most unexplained delays on included transactions trace to this explanation</li>
+                                <li>Calculate <strong>remaining confirmations</strong> and multiply by current average block time - this converts a frustrating wait into a predictable one, which is the most effective customer communication in this scenario</li>
+                                <li>Distinguish from a <strong>genuine chain reorganisation</strong> - if the block containing the transaction is replaced, the transaction reverts to pending on the explorer and may temporarily disappear from history before being re-included</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4>Resolve</h4>
+                            <ul class="bullet-list">
+                                <li>Explain that this is <strong>expected platform behaviour</strong> - confirmation thresholds protect against the financial risk of crediting a transaction that may still be reorganised out of the canonical chain</li>
+                                <li>Provide the <strong>exact confirmation count required and estimated completion time</strong> - generic "please wait" responses are the most common cause of repeat contacts on this issue type</li>
+                                <li>If a genuine reorg has occurred: the transaction will typically be <strong>rebroadcast and re-included</strong> by the original sender's node in most cases, but this is not guaranteed. If it does not reappear within a reasonable window, the customer may need to resubmit</li>
+                                <li>For latency-sensitive use cases, recommend evaluating <strong>chains with shorter confirmation thresholds</strong> - Base, Arbitrum, and Polygon offer faster finality and proportionally lower platform credit thresholds</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ─────────────────────────────────────────────────── -->
+        <!-- SECTION 7 - COMPLIANCE & SECURITY ESCALATION       -->
+        <!-- ─────────────────────────────────────────────────── -->
+        <section class="section section-alt">
+            <div class="container">
+                <h2>Compliance &amp; Security Escalation</h2>
+                <p class="section-intro">
+                    In stablecoin and payments infrastructure, some operational states that resemble technical
+                    failures are compliance or security holds. Treating a sanctions screening hold as a bug,
+                    or advising a retry on a transaction flagged for AML review, can have serious regulatory
+                    consequences. Support engineers in fintech and Web3 infrastructure must know where the
+                    technical investigation stops and the compliance escalation begins.
+                </p>
+
+                <div class="card" style="margin-bottom:1.5rem;">
+                    <h3>Sanctions Screening &amp; AML Holds</h3>
+                    <div class="two-column" style="margin-top:1rem;">
+                        <div>
+                            <h4>Identify</h4>
+                            <ul class="bullet-list">
+                                <li>If a transfer is blocked with no corresponding on-chain failure, check the <strong>platform's transfer status</strong> - a compliance-held transaction will show a status distinct from technical failure states (e.g. <code>pending_review</code> or <code>held</code>)</li>
+                                <li>Check whether the <strong>account's KYC or verification status</strong> is complete - incomplete onboarding, expired verification, or outstanding document requests block transactions silently from the customer's perspective</li>
+                                <li>Note whether the transaction involves an address <strong>flagged by chain analytics tooling</strong> (e.g. Chainalysis, Elliptic) - such flags can trigger automatic holds that look like platform errors but are compliance decisions</li>
+                                <li>Do not attempt to diagnose the specific compliance reason from support tooling - <strong>compliance case details are restricted to the compliance team</strong> and should not be discussed with the customer beyond acknowledging a review is in progress</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4>Resolve</h4>
+                            <ul class="bullet-list">
+                                <li><strong>Do not advise the customer to retry</strong> a transaction that may be under compliance review - retrying a potentially sanctioned transaction compounds the regulatory issue and creates additional records that complicate the review</li>
+                                <li>Escalate immediately to the <strong>compliance or trust and safety team</strong> with the transaction ID, account ID, and relevant context - do not route compliance holds through engineering channels</li>
+                                <li>Communicate to the customer that the transaction is <strong>under review</strong> and that the relevant team will be in contact - do not disclose the review reason, the reviewing team, or expected timelines unless explicitly cleared to do so</li>
+                                <li>Document the escalation in the incident record with a <strong>clear audit trail</strong> - compliance escalations require separate documentation from standard technical incident notes</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Compromised Wallet or Suspected Fraud</h3>
+                    <div class="two-column" style="margin-top:1rem;">
+                        <div>
+                            <h4>Identify</h4>
+                            <ul class="bullet-list">
+                                <li>If a customer reports <strong>unauthorised transactions from their wallet</strong>, treat this as a security incident immediately - do not investigate as a standard technical failure</li>
+                                <li>Check the <strong>transaction history on the block explorer</strong> for the affected address - look for unexpected outflows, token approvals to unknown contracts, or interactions with known drainer or phishing contract addresses</li>
+                                <li>Determine whether the customer uses a <strong>custodial or non-custodial wallet</strong> - the platform's ability to act and the response path differ significantly between these two models</li>
+                                <li>Check whether the customer has recently <strong>signed an approval they may not have fully understood</strong> - unlimited token approvals granted to malicious contracts are a primary vector for wallet drains</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4>Resolve</h4>
+                            <ul class="bullet-list">
+                                <li>Advise the customer to <strong>immediately revoke all token approvals</strong> for unfamiliar contracts using a tool such as revoke.cash - this stops ongoing drain access even if the initial compromise has already occurred</li>
+                                <li>If the wallet is custodial and the platform can freeze activity: <strong>escalate to the security or operations team immediately</strong> for a platform-level account freeze pending investigation</li>
+                                <li>Advise the customer to <strong>move remaining assets to a new, uncompromised wallet as a priority</strong> - do not wait for the investigation to complete before migrating funds, as the compromised key remains active until assets are moved</li>
+                                <li>Open a <strong>formal security incident</strong> rather than a standard support ticket - compromised wallet cases require a separate investigation trail, security team coordination, and potentially regulatory notification depending on the platform and jurisdiction</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ─────────────────────────────────────────────────── -->
+        <!-- SECTION 8 - OPERATIONAL PRINCIPLES                 -->
+        <!-- ─────────────────────────────────────────────────── -->
+        <section class="section">
+            <div class="container">
+                <h2>Operational Principles</h2>
+                <p class="section-intro">
+                    The failure patterns in this guide all share a common investigation logic. These are the
+                    principles I apply consistently across on-chain support cases, regardless of which specific
+                    failure type is presenting.
+                </p>
+                <div class="two-column">
+                    <div class="card">
+                        <h3>Investigation Discipline</h3>
+                        <ul class="bullet-list">
+                            <li><strong>Chain state is the ground truth. Explorers are representations of it.</strong> Block explorers index chain data and can lag, diverge between providers, or temporarily misrepresent mid-reorganisation state. When explorer data and customer-reported data conflict, query the chain directly via RPC before drawing any conclusion.</li>
+                            <li><strong>Identify the failure layer before acting.</strong> API rejection, broadcast failure, mempool drop, on-chain revert, confirmation hold, platform processing lag, and compliance hold all present as "transaction not arrived." Each has a different fix. Applying the wrong one wastes time and can compound the original problem.</li>
+                            <li><strong>Gather evidence independently.</strong> Do not rely solely on what the customer reports or what the application layer logged. Cross-reference the transaction hash on the chain, verify distributed traces with the correlation ID, and check webhook delivery records separately from customer-reported receipt.</li>
+                            <li><strong>Incomplete and conflicting telemetry is normal.</strong> Real investigations frequently involve contradictory signals: one RPC provider shows pending, another shows dropped; the explorer shows inclusion while the platform shows processing; delivery logs show success while the customer reports non-receipt. Hold multiple hypotheses and eliminate them systematically - do not lock onto the first consistent explanation.</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>Escalation &amp; Risk Management</h3>
+                        <ul class="bullet-list">
+                            <li><strong>Irreversibility changes the stakes.</strong> A misdirected transaction cannot be recalled. Gas on a failed transaction is not refunded. An incorrectly advised retry during a compliance hold creates regulatory exposure. In blockchain support, acting before the root cause is confirmed carries direct financial and legal risk. Speed is not a virtue when the action is irreversible.</li>
+                            <li><strong>Know when not to advise action.</strong> A confirming transaction should not be resubmitted. A compliance-held transaction should not be retried. A nonce gap should not be filled without confirming the dropped transaction is truly gone. The most impactful thing a support engineer sometimes does is stop a customer from making a problem significantly worse.</li>
+                            <li><strong>Distinguish platform failures from chain failures precisely.</strong> Validator outages, congestion, and reorgs are outside platform control. Webhook failures, RPC degradation, and API bugs are not. Customer communication, escalation path, and SLA commitment differ entirely between these categories - conflating them erodes customer trust and misdirects engineering effort.</li>
+                            <li><strong>Escalation quality matters more than escalation speed.</strong> An escalation with a transaction hash, decoded revert reason, reproduction steps, correlation ID, and a clear hypothesis is resolved in a fraction of the time of one that says "customer reports transaction failed." The investigation done before escalation determines how quickly the issue gets fixed.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        </main>
+
+        <!-- Contact -->
+        <section id="contact" class="section section-alt">
+            <div class="container two-column">
+                <div>
+                    <h2>Let's Talk</h2>
+                    <p class="section-intro">
+                        I'm open to roles in SaaS, fintech and crypto/Web3 support - particularly where reliability,
+                        observability, and customer impact are central.
+                    </p>
+                </div>
+                <div class="contact-block">
+                    <p><strong>Email:</strong> <a href="mailto:johnbeedles@gmail.com">johnbeedles@gmail.com</a></p>
+                    <p><strong>Location:</strong> Bournemouth, United Kingdom</p>
+                    <p><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/john-beedles-a428b3139" target="_blank">View Profile</a></p>
+                </div>
+            </div>
+        </section>
+
+        <footer class="site-footer">
+            <div class="container footer-container">
+                <p>&copy; <span id="year"></span> John Beedles. All rights reserved.</p>
+                <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+            </div>
+        </footer>
+
+    </div>
+
+</body>
+</html>

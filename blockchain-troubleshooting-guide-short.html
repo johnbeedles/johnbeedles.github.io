@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blockchain Support: On-Chain Failure Troubleshooting Guide | John Beedles</title>
+
+    <!-- Modular CSS -->
+    <link rel="stylesheet" href="core.css">
+    <link rel="stylesheet" href="components.css">
+    <link rel="stylesheet" href="pages.css">
+</head>
+<body>
+
+    <div class="site-wrapper">
+
+        <!-- Header -->
+        <header class="site-header">
+            <div class="container header-container">
+                <div class="logo">
+                    <span class="logo-mark">JB</span>
+                    <span class="logo-text">John Beedles</span>
+                </div>
+
+                <nav class="nav">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="cv.html" class="nav-link">CV</a>
+                    <a href="portfolio.html" class="nav-link active">Portfolio</a>
+                    <a href="#contact" class="nav-link">Contact</a>
+                </nav>
+            </div>
+        </header>
+
+        <main>
+
+        <!-- Hero -->
+        <section class="hero">
+            <div class="container hero-container">
+                <div class="hero-content">
+
+                    <h1 class="hero-title">
+                        Blockchain Support Reference<br>
+                        <span class="hero-highlight">
+                            On-Chain Failure Troubleshooting Guide
+                        </span>
+                    </h1>
+
+                    <p class="hero-subtitle">
+                        A practical support engineer reference covering the most common on-chain
+                        failure patterns - from pending and failed transactions through to wrong
+                        network errors and confirmation delays.
+                        Each failure mode includes structured identification steps and a clear
+                        resolution path, reflecting the structured investigation and operational
+                        reasoning required in production blockchain support environments.
+                    </p>
+
+                    <div class="hero-actions">
+                        <a href="portfolio.html" class="btn btn-primary">
+                            Back to Portfolio
+                        </a>
+                    </div>
+
+                    <div class="hero-meta">
+                        <span>Blockchain Troubleshooting</span>
+                        <span>On-Chain Debugging</span>
+                        <span>Gas Analysis</span>
+                        <span>Transaction Lifecycle</span>
+                        <span>USDC / EVM</span>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Overview -->
+        <section class="section">
+            <div class="container two-column">
+
+                <!-- LEFT -->
+                <div>
+
+                    <h2>About This Guide</h2>
+
+                    <p class="section-intro">
+                        Supporting blockchain platforms introduces failure patterns that don't
+                        exist in traditional software support: transactions that are irreversible,
+                        finality delays that are by design, multi-chain environments where the
+                        same address means different things depending on context, and on-chain
+                        state that is independently verifiable via block explorers.
+                    </p>
+
+                    <p class="section-intro" style="margin-top:1rem;">
+                        This reference organises those failure patterns by category, with
+                        step-by-step identification and resolution guidance for each.
+                        It reflects the kind of structured investigation approach I apply to
+                        on-chain support cases - always establishing the layer of failure before
+                        acting, and always gathering on-chain evidence before escalating or advising.
+                    </p>
+
+                    <p class="section-intro" style="margin-top:1rem;">
+                        The focus throughout is operational accuracy over speed:
+                        validating chain state, isolating the failure layer,
+                        correlating API behaviour with on-chain evidence,
+                        and avoiding remediation steps that could increase financial risk
+                        or create duplicate transactions.
+                    </p>
+
+                    <h3 style="margin-top:1.5rem;">What This Guide Covers</h3>
+
+                    <ul class="bullet-list">
+                        <li>
+                            <strong>Transaction Pending</strong>
+                            - low gas, network congestion, validator delays
+                        </li>
+
+                        <li>
+                            <strong>Transaction Failed</strong>
+                            - insufficient funds, smart contract reverts,
+                            gas exhausted, invalid parameters
+                        </li>
+
+                        <li>
+                            <strong>Wrong Network</strong>
+                            - chain mismatches and environment
+                            (testnet vs production) errors
+                        </li>
+
+                        <li>
+                            <strong>Confirmation Delays</strong>
+                            - congestion at the confirmation layer,
+                            validator issues, reorg protection periods
+                        </li>
+                    </ul>
+
+                </div>
+
+                <!-- RIGHT -->
+                <div class="card">
+
+                    <h3>Skills Demonstrated</h3>
+
+                    <ul class="bullet-list">
+                        <li>
+                            On-chain transaction debugging, trace analysis,
+                            and event log verification
+                        </li>
+
+                        <li>
+                            Block explorer investigation
+                            (Etherscan, Basescan, Tenderly)
+                        </li>
+
+                        <li>
+                            Mempool analysis, nonce management,
+                            and replacement transaction handling
+                        </li>
+
+                        <li>
+                            Gas mechanics, EIP-1559 fee model,
+                            and transaction propagation behaviour
+                        </li>
+
+                        <li>
+                            ERC-20 token standards, approvals,
+                            and smart contract interaction patterns
+                        </li>
+
+                        <li>
+                            Multi-chain environment triage
+                            (EVM chains, chain ID verification)
+                        </li>
+
+                        <li>
+                            API authentication debugging,
+                            webhook troubleshooting,
+                            and idempotency handling
+                        </li>
+
+                        <li>
+                            Structured escalation methodology with
+                            evidence-based root cause analysis
+                        </li>
+
+                        <li>
+                            Observability-driven investigation using logs,
+                            trace IDs, and RPC diagnostics
+                        </li>
+                    </ul>
+
+                    <h3 style="margin-top:1.5rem;">Reference Tools</h3>
+
+                    <ul class="bullet-list">
+                        <li>Etherscan / Basescan / Solscan</li>
+
+                        <li>
+                            Tenderly (transaction simulation,
+                            traces, and revert decoding)
+                        </li>
+
+                        <li>
+                            Postman (API reproduction with sanitised payloads)
+                        </li>
+
+                        <li>
+                            RPC provider diagnostics and chain status monitoring
+                        </li>
+
+                        <li>
+                            Structured application logs and request correlation IDs
+                        </li>
+
+                        <li>
+                            Webhook delivery logs and retry monitoring
+                        </li>
+
+                        <li>
+                            Block explorer gas trackers and mempool visualisation tools
+                        </li>
+                    </ul>
+
+                    <h3 style="margin-top:1.5rem;">Key Concepts</h3>
+
+                    <ul class="bullet-list">
+                        <li>
+                            Transaction lifecycle:
+                            sign → broadcast → validate →
+                            include → confirm → finalise
+                        </li>
+
+                        <li>
+                            Gas: base fee + priority tip;
+                            limit vs price distinction
+                        </li>
+
+                        <li>
+                            Finality: Ethereum requires
+                            2/3 supermajority validator attestation (~66.7%)
+                        </li>
+
+                        <li>
+                            USDC: 6 decimal places on EVM chains
+                            (1 USDC = 1,000,000 raw units)
+                        </li>
+                    </ul>
+
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECTION 1 -->
+        <section class="section section-alt">
+            <div class="container">
+
+                <h2>Transaction Pending</h2>
+
+                <p class="section-intro">
+                    A pending transaction has been broadcast to the network but not yet
+                    included in a confirmed block.
+                    The cause determines whether the user needs to act or simply wait.
+                    Always check the block explorer first to confirm the transaction has
+                    been broadcast at all - a transaction with no explorer record has
+                    a different root cause entirely (RPC or broadcast failure).
+                </p>
+
+                <!-- Low Gas -->
+                <div class="card" style="margin-bottom:1.5rem;">
+
+                    <h3>Low Gas Price Set by User</h3>
+
+                    <div class="two-column" style="margin-top:1rem;">
+
+                        <div>
+
+                            <h4>Identify</h4>
+
+                            <ul class="bullet-list">
+
+                                <li>
+                                    Get the <code>transaction hash</code> from the customer
+                                    and look it up on the relevant block explorer
+                                </li>
+
+                                <li>
+                                    Check the <strong>gas price paid</strong> and compare it
+                                    against the current network base fee
+                                </li>
+
+                                <li>
+                                    Confirm the status shows <strong>Pending</strong> - not Failed
+                                </li>
+
+                                <li>
+                                    Ask whether the customer set a custom gas price manually
+                                </li>
+
+                                <li>
+                                    Check whether another pending transaction with a lower nonce
+                                    is blocking confirmation - nonce gaps commonly cause later
+                                    transactions to remain pending even when gas pricing is sufficient
+                                </li>
+
+                            </ul>
+
+                        </div>
+
+                        <div>
+
+                            <h4>Resolve</h4>
+
+                            <ul class="bullet-list">
+
+                                <li>
+                                    Advise the customer to use their wallet's
+                                    <strong>speed up</strong> function
+                                </li>
+
+                                <li>
+                                    If no speed-up option is available,
+                                    submit a replacement transaction with the same nonce
+                                </li>
+
+                                <li>
+                                    For API-submitted transactions,
+                                    resubmit with a higher fee configuration
+                                </li>
+
+                                <li>
+                                    Confirm the replacement transaction is accepted and the
+                                    original is dropped from the mempool
+                                </li>
+
+                                <li>
+                                    If using multiple RPC providers, confirm the replacement
+                                    transaction has propagated consistently across nodes —
+                                    mempool state can differ temporarily between providers
+                                </li>
+
+                            </ul>
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Congestion -->
+                <div class="card" style="margin-bottom:1.5rem;">
+
+                    <h3>Network Congestion</h3>
+
+                    <div class="two-column" style="margin-top:1rem;">
+
+                        <div>
+
+                            <h4>Identify</h4>
+
+                            <ul class="bullet-list">
+
+                                <li>
+                                    Check a gas tracker and compare current base fee levels
+                                </li>
+
+                                <li>
+                                    Check mempool backlog size
+                                </li>
+
+                                <li>
+                                    Confirm whether multiple customers are reporting delays
+                                </li>
+
+                                <li>
+                                    Review chain status pages for infrastructure incidents
+                                </li>
+
+                            </ul>
+
+                        </div>
+
+                        <div>
+
+                            <h4>Resolve</h4>
+
+                            <ul class="bullet-list">
+
+                                <li>
+                                    Explain this is a network-level condition
+                                </li>
+
+                                <li>
+                                    Advise waiting if the use case is not time-sensitive
+                                </li>
+
+                                <li>
+                                    Recommend dynamic gas pricing for future integrations
+                                </li>
+
+                                <li>
+                                    Use replacement transactions only when urgency justifies it
+                                </li>
+
+                            </ul>
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Validator -->
+                <div class="card">
+
+                    <h3>Validator Delays</h3>
+
+                    <div class="two-column" style="margin-top:1rem;">
+
+                        <div>
+
+                            <h4>Identify</h4>
+
+                            <ul class="bullet-list">
+
+                                <li>
+                                    Compare recent block timestamps against normal cadence
+                                </li>
+
+                                <li>
+                                    Check official status pages and validator incident reports
+                                </li>
+
+                                <li>
+                                    Confirm the transaction exists on-chain
+                                </li>
+
+                                <li>
+                                    Check whether delays affect multiple users and wallets
+                                </li>
+
+                            </ul>
+
+                        </div>
+
+                        <div>
+
+                            <h4>Resolve</h4>
+
+                            <ul class="bullet-list">
+
+                                <li>
+                                    Explain this is external infrastructure outside platform control
+                                </li>
+
+                                <li>
+                                    Monitor recovery rather than immediately resubmitting
+                                </li>
+
+                                <li>
+                                    Re-broadcast through another RPC provider if necessary
+                                </li>
+
+                                <li>
+                                    Escalate internally if platform-operated infrastructure
+                                    is also degraded
+                                </li>
+
+                                <li>
+                                    When escalating internally, include transaction hashes,
+                                    affected chain IDs, timestamps, RPC providers,
+                                    correlation IDs, and customer impact summary
+                                    to accelerate engineering investigation
+                                </li>
+
+                            </ul>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECTION 2 -->
+        <section class="section">
+            <div class="container">
+
+                <h2>Transaction Failed</h2>
+
+                <p class="section-intro">
+                    A failed transaction has been broadcast, reached the chain,
+                    and been rejected at execution time.
+                    Unlike a pending transaction, a failed status is final for
+                    that submission and will not retry automatically.
+                </p>
+
+                <!-- Invalid Parameters -->
+                <div class="card">
+
+                    <h3>Invalid Parameters</h3>
+
+                    <div class="two-column" style="margin-top:1rem;">
+
+                        <div>
+
+                            <h4>Identify</h4>
+
+                            <ul class="bullet-list">
+
+                                <li>
+                                    Review API request payloads and calldata carefully
+                                </li>
+
+                                <li>
+                                    Check structured validation responses from the API
+                                </li>
+
+                                <li>
+                                    Verify address format and checksum validation
+                                </li>
+
+                                <li>
+                                    Confirm chain ID alignment between wallet and network
+                                </li>
+
+                                <li>
+                                    Review request correlation IDs, API logs,
+                                    and webhook delivery logs to confirm whether
+                                    the request failed during validation,
+                                    asynchronous processing,
+                                    or downstream reconciliation
+                                </li>
+
+                            </ul>
+
+                        </div>
+
+                        <div>
+
+                            <h4>Resolve</h4>
+
+                            <ul class="bullet-list">
+
+                                <li>
+                                    Map the validation failure to the offending parameter
+                                </li>
+
+                                <li>
+                                    Verify token decimal precision is correct
+                                </li>
+
+                                <li>
+                                    Recommend client-side validation before submission
+                                </li>
+
+                                <li>
+                                    Resubmit using a new idempotency key
+                                </li>
+
+                                <li>
+                                    If webhooks are involved,
+                                    confirm the customer is validating webhook signatures
+                                    and handling retry events idempotently
+                                    to avoid duplicate processing
+                                </li>
+
+                            </ul>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECTION 3 -->
+        <section class="section section-alt">
+            <div class="container">
+
+                <h2>Wrong Network</h2>
+
+                <p class="section-intro">
+                    Wrong network errors are among the most disorienting for customers
+                    because the transaction often succeeds technically —
+                    the funds arrive somewhere, just not where intended.
+                </p>
+
+                <div class="card">
+
+                    <h3>Testnet Address or Credentials Used in Production</h3>
+
+                    <div class="two-column" style="margin-top:1rem;">
+
+                        <div>
+
+                            <h4>Identify</h4>
+
+                            <ul class="bullet-list">
+
+                                <li>
+                                    Confirm whether sandbox or production credentials were used
+                                </li>
+
+                                <li>
+                                    Compare balances across mainnet and testnet explorers
+                                </li>
+
+                                <li>
+                                    Verify chain IDs and configured environments
+                                </li>
+
+                                <li>
+                                    Review deployment configuration and environment variables
+                                </li>
+
+                            </ul>
+
+                        </div>
+
+                        <div>
+
+                            <h4>Resolve</h4>
+
+                            <ul class="bullet-list">
+
+                                <li>
+                                    Confirm the customer has completed production onboarding
+                                </li>
+
+                                <li>
+                                    Ensure the correct production API base URL is being used
+                                </li>
+
+                                <li>
+                                    Replace hardcoded testnet values with production equivalents
+                                </li>
+
+                                <li>
+                                    Recommend environment-variable based configuration management
+                                </li>
+
+                            </ul>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECTION 4 -->
+        <section class="section">
+            <div class="container">
+
+                <h2>Confirmation Delays</h2>
+
+                <p class="section-intro">
+                    Confirmation delays occur after a transaction has been included
+                    in a block but before downstream systems recognise it as final.
+                </p>
+
+                <div class="card">
+
+                    <h3>Network Congestion at the Confirmation Layer</h3>
+
+                    <div class="two-column" style="margin-top:1rem;">
+
+                        <div>
+
+                            <h4>Identify</h4>
+
+                            <ul class="bullet-list">
+
+                                <li>
+                                    Verify the transaction has a block number
+                                </li>
+
+                                <li>
+                                    Compare accumulated confirmations against platform thresholds
+                                </li>
+
+                                <li>
+                                    Compare current block times against normal cadence
+                                </li>
+
+                                <li>
+                                    Confirm whether delays affect multiple users
+                                </li>
+
+                            </ul>
+
+                        </div>
+
+                        <div>
+
+                            <h4>Resolve</h4>
+
+                            <ul class="bullet-list">
+
+                                <li>
+                                    Reassure the customer the transaction has been included
+                                    on-chain and is progressing through confirmations.
+                                    While short-lived reorganisations are possible before finality,
+                                    transactions that continue accumulating confirmations are
+                                    generally considered secure.
+                                </li>
+
+                                <li>
+                                    Provide estimated completion time based on current block speed
+                                </li>
+
+                                <li>
+                                    Explain that confirmation accumulation is automatic
+                                </li>
+
+                                <li>
+                                    Recommend higher gas priority during congestion windows
+                                </li>
+
+                            </ul>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Key Takeaways -->
+        <section class="section section-alt">
+
+            <div class="container">
+
+                <h2>Key Principles for Blockchain Support</h2>
+
+                <div class="card">
+
+                    <p>
+                        Blockchain support differs from traditional software support
+                        in one fundamental way:
+                        the chain itself is the source of truth,
+                        while block explorers provide a readable representation
+                        of that state.
+                        Before forming any hypothesis,
+                        the first action is always to look up the transaction hash
+                        and establish what the chain actually recorded —
+                        not what the customer believes happened,
+                        and not what the application layer reported.
+                    </p>
+
+                    <p style="margin-top:1rem;">
+                        The second consistent theme across these failure patterns
+                        is the importance of layer identification before action.
+                        Is the issue at the API layer,
+                        broadcast layer,
+                        validation layer,
+                        execution layer,
+                        or confirmation layer?
+                    </p>
+
+                    <p style="margin-top:1rem;">
+                        Finally:
+                        <strong>irreversibility changes the stakes.</strong>
+                        A mis-directed transaction cannot be recalled,
+                        and gas spent on failed execution is not refunded.
+                        In blockchain support,
+                        advising customers to act before the root cause is understood
+                        carries real financial risk.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        </main>
+
+        <!-- Contact -->
+        <section id="contact" class="section">
+
+            <div class="container two-column">
+
+                <div>
+
+                    <h2>Let's Talk</h2>
+
+                    <p class="section-intro">
+                        I'm open to roles in SaaS, fintech and crypto/Web3 support —
+                        particularly where reliability, observability,
+                        and customer impact are central.
+                    </p>
+
+                </div>
+
+                <div class="contact-block">
+
+                    <p>
+                        <strong>Email:</strong>
+                        <a href="mailto:johnbeedles@gmail.com">
+                            johnbeedles@gmail.com
+                        </a>
+                    </p>
+
+                    <p>
+                        <strong>Location:</strong>
+                        Bournemouth, United Kingdom
+                    </p>
+
+                    <p>
+                        <strong>LinkedIn:</strong>
+                        <a href="https://www.linkedin.com/in/john-beedles-a428b3139"
+                           target="_blank">
+                            View Profile
+                        </a>
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <footer class="site-footer">
+
+            <div class="container footer-container">
+
+                <p>
+                    © <span id="year"></span> John Beedles.
+                    All rights reserved.
+                </p>
+
+                <script>
+                    document.getElementById('year').textContent =
+                        new Date().getFullYear();
+                </script>
+
+            </div>
+
+        </footer>
+
+    </div>
+
+</body>
+</html>

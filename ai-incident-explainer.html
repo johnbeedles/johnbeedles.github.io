@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Project: Incident Explainer - Python · FastAPI · LangChain | John Beedles</title>
+
+    <!-- Modular CSS -->
+    <link rel="stylesheet" href="core.css">
+    <link rel="stylesheet" href="components.css">
+    <link rel="stylesheet" href="pages.css">
+</head>
+<body>
+
+    <div class="site-wrapper">
+
+        <!-- Header -->
+        <header class="site-header">
+            <div class="container header-container">
+                <div class="logo">
+                    <span class="logo-mark">JB</span>
+                    <span class="logo-text">John Beedles</span>
+                </div>
+                <nav class="nav">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="cv.html" class="nav-link">CV</a>
+                    <a href="portfolio.html" class="nav-link active">Portfolio</a>
+                    <a href="#contact" class="nav-link">Contact</a>
+                </nav>
+            </div>
+        </header>
+
+        <main>
+
+        <!-- Hero -->
+        <section class="hero">
+            <div class="container hero-container">
+                <div class="hero-content">
+                    <h1 class="hero-title">
+                        AI Project: Incident Explainer<br>
+                        <span class="hero-highlight">Python · FastAPI · LangChain · OpenAI</span>
+                    </h1>
+
+                    <p class="hero-subtitle">
+                        A Python-powered tool that takes raw API errors, logs, and stack traces and returns a
+                        structured plain-English breakdown - root cause, severity classification, suggested fix,
+                        and confidence scoring. Built to demonstrate AI-assisted incident response and
+                        developer support workflows across Web3, payments, and REST API environments.
+                    </p>
+
+                    <div class="hero-actions">
+                        <a href="portfolio.html" class="btn btn-primary">Back to Portfolio</a>
+                    </div>
+
+                    <div class="hero-meta">
+                        <span>Python &amp; FastAPI</span>
+                        <span>LangChain &amp; OpenAI</span>
+                        <span>Incident Response</span>
+                        <span>API Debugging</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Project Overview -->
+        <section class="section">
+            <div class="container two-column">
+
+                <!-- LEFT -->
+                <div>
+                    <h2>Project Overview</h2>
+                    <p class="section-intro">
+                        Modern systems fail in cryptic ways. A blockchain transaction reverts silently. A payment
+                        API returns a 402 with a decline code that means nothing without context. A 429 floods
+                        the logs at 9am and no one knows why it started. In all three cases the raw error is
+                        technically correct but practically useless to everyone except the engineer who wrote
+                        the API.
+                    </p>
+                    <p class="section-intro">
+                        The AI Incident Explainer bridges that gap. It accepts any raw error - JSON responses,
+                        HTTP logs, smart contract revert strings, stack traces - runs it through an AI analysis
+                        chain, and returns a structured breakdown: what happened, why it happened, what to do,
+                        and how confident the system is in that diagnosis. The output is designed to be
+                        immediately actionable, suitable for sharing with a user, pasting into a post-incident
+                        review, or using as a starting point for deeper investigation.
+                    </p>
+                </div>
+
+                <!-- RIGHT -->
+                <div class="card">
+                    <h3>Skills Demonstrated</h3>
+                    <ul class="bullet-list">
+                        <li>Python API development</li>
+                        <li>LangChain LCEL chain design</li>
+                        <li>Structured LLM output parsing</li>
+                        <li>Pydantic data validation</li>
+                        <li>Incident root cause analysis</li>
+                        <li>Severity and category classification</li>
+                        <li>Clear technical communication</li>
+                    </ul>
+
+                    <h3 style="margin-top:1.5rem;">Tech Stack</h3>
+                    <ul class="bullet-list">
+                        <li>Python 3.11</li>
+                        <li>FastAPI + Uvicorn</li>
+                        <li>LangChain (LCEL)</li>
+                        <li>OpenAI GPT-4o-mini</li>
+                        <li>Pydantic v2</li>
+                        <li>HTML / CSS / Vanilla JS frontend</li>
+                    </ul>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- What This Project Demonstrates -->
+        <section class="section section-alt">
+            <div class="container">
+                <h2>What This Project Demonstrates</h2>
+                <div class="card">
+                    <ul class="bullet-list">
+                        <li>Building a production-grade REST API with Python and FastAPI</li>
+                        <li>Designing and chaining LLM prompts using LangChain LCEL</li>
+                        <li>Enforcing structured JSON output from a language model</li>
+                        <li>Incident triage and severity classification (P1–P4)</li>
+                        <li>Cross-domain error pattern recognition - Web3, payments, REST</li>
+                        <li>Translating technical errors into plain-English user guidance</li>
+                        <li>Frontend delivery served directly from a FastAPI backend</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Why This Was Built -->
+        <section class="section">
+            <div class="container">
+                <h2>Why This Was Built</h2>
+                <div class="card">
+                    <p>
+                        Support engineers and developers spend a significant amount of time decoding errors that
+                        are technically accurate but communicate nothing useful. A raw <code>429 Too Many Requests</code>
+                        tells you what happened at the HTTP layer. It does not tell you whether the cause is a polling
+                        loop, an N+1 query pattern, a missing cache, or a sudden spike in user activity - and it
+                        certainly does not tell you what to do about it.
+                    </p>
+                    <p style="margin-top:1rem;">
+                        This tool was built to demonstrate how language models can be integrated into a real support
+                        workflow - not as a chatbot, but as a structured analysis engine with a consistent, typed
+                        output contract. The design mirrors how I approach real incidents: identify the plain-English
+                        summary first, then the specific technical cause, then the blast radius, then concrete next
+                        steps. The AI makes that structure available on demand, for any error, in under two seconds.
+                    </p>
+                    <p style="margin-top:1rem;">
+                        A secondary goal was to build something directly relevant to roles in AI support engineering -
+                        demonstrating LLM API integration, prompt engineering, and the ability to think about AI
+                        output as a typed data contract rather than free-form text.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tech Stack Detail -->
+        <section class="section section-alt">
+            <div class="container">
+                <h2>Tech Stack - Decisions and Rationale</h2>
+                <p class="section-intro">
+                    Each technology in the stack was chosen for a specific reason, not just familiarity.
+                </p>
+
+                <div class="card">
+                    <h3>FastAPI</h3>
+                    <p>
+                        FastAPI handles HTTP routing, request and response validation via Pydantic, and serves
+                        the frontend HTML as a static file. It was chosen over Flask for its native async support,
+                        automatic OpenAPI documentation at <code>/docs</code>, and first-class Pydantic integration -
+                        which means the API contract is enforced at the framework level, not in ad-hoc validation
+                        code. The interactive docs at <code>/docs</code> also make the API immediately demonstrable
+                        without a frontend.
+                    </p>
+                </div>
+
+                <div class="card" style="margin-top:1rem;">
+                    <h3>LangChain - StructuredOutputParser and LCEL</h3>
+                    <p>
+                        LangChain's <code>StructuredOutputParser</code> is the core architectural decision. It
+                        accepts a list of <code>ResponseSchema</code> objects - one per output field - and
+                        automatically generates the format instructions that are appended to every prompt. This
+                        eliminates the need to manually craft JSON schema instructions and handles parsing edge
+                        cases where the model slightly mis-formats its output. The chain follows the LangChain
+                        Expression Language (LCEL) pattern, connecting components with the pipe operator:
+                    </p>
+                    <p style="margin-top:1rem; font-family: 'Courier New', monospace; font-size:0.85rem; background:#f8fafc; padding:1rem; border-radius:6px; border:1px solid #e2e8f0; color:#1e293b;">
+                        ChatPromptTemplate &nbsp;→&nbsp; ChatOpenAI (gpt-4o-mini) &nbsp;→&nbsp; StructuredOutputParser &nbsp;→&nbsp; Python dict
+                    </p>
+                    <p style="margin-top:1rem;">
+                        The chain is built once at application startup and reused for every request, avoiding
+                        re-initialisation overhead on each call. The model runs at <code>temperature=0.2</code>
+                        for consistent, factual output across repeated runs on identical inputs.
+                    </p>
+                </div>
+
+                <div class="card" style="margin-top:1rem;">
+                    <h3>OpenAI GPT-4o-mini</h3>
+                    <p>
+                        GPT-4o-mini was selected over the full GPT-4o model for this use case because the task -
+                        classifying and explaining a bounded error input - does not require the reasoning depth of
+                        the larger model. The smaller model responds faster, costs significantly less at scale,
+                        and at <code>temperature=0.2</code> produces output quality that is functionally
+                        identical for structured classification tasks. For a production deployment this would also
+                        make the tool viable to run at high request volume without cost constraints.
+                    </p>
+                </div>
+
+                <div class="card" style="margin-top:1rem;">
+                    <h3>Pydantic - Request and Response Contracts</h3>
+                    <p>
+                        Every request and response is defined as a Pydantic model. The <code>AnalyseRequest</code>
+                        model validates incoming payloads; the <code>AnalyseResponse</code> model shapes the
+                        outgoing data. This means the LLM output is never passed raw to the client - it is
+                        re-typed through a Pydantic model that rejects malformed fields, coerces types, and
+                        guarantees a stable interface. Edge cases where the model returns <code>suggestedFix</code>
+                        as a plain string rather than an array are caught and re-parsed before the response
+                        is constructed.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Was Built -->
+        <section class="section">
+            <div class="container">
+                <h2>How It Was Built - Step by Step</h2>
+                <p class="section-intro">
+                    The build followed a deliberate sequence - output schema first, then the AI chain,
+                    then the API wrapper, then the frontend.
+                </p>
+
+                <div class="card">
+                    <h3>Step 1 - Define the Output Schema</h3>
+                    <p>
+                        Before writing any code, the output contract was defined: what fields does a useful
+                        incident analysis need to contain? The schema settled on ten fields -
+                        <code>explanation</code>, <code>rootCause</code>, <code>category</code>,
+                        <code>severity</code>, <code>suggestedFix</code>, <code>confidence</code>,
+                        <code>confidenceReason</code>, <code>docLinks</code>, <code>beforeSummary</code>,
+                        and <code>afterSummary</code>. Defining the output first meant the prompt could be
+                        engineered to produce exactly those fields, rather than retrofitting structure onto
+                        whatever the model naturally returned.
+                    </p>
+                </div>
+
+                <div class="card" style="margin-top:1rem;">
+                    <h3>Step 2 - Build the LangChain Chain</h3>
+                    <p>
+                        Each output field was defined as a <code>ResponseSchema</code> object with a name and
+                        description. The <code>StructuredOutputParser</code> consumes these schemas and generates
+                        format instructions automatically. The system prompt instructs the model to act as a
+                        senior incident response engineer, specifies valid values for enumerated fields
+                        (severity must be P1/P2/P3/P4; category must be one of nine defined types), and sets
+                        the analytical tone - precise, actionable, no jargon in the user-facing explanation layer.
+                    </p>
+                </div>
+
+                <div class="card" style="margin-top:1rem;">
+                    <h3>Step 3 - Wrap in a FastAPI Endpoint</h3>
+                    <p>
+                        The <code>POST /analyse</code> endpoint accepts a Pydantic <code>AnalyseRequest</code>
+                        model, invokes the LangChain chain with the error input and format instructions, handles
+                        edge cases in the parsed output, and returns a fully typed <code>AnalyseResponse</code>.
+                        An <code>elapsed_ms</code> field is included in every response for latency visibility.
+                        A <code>GET /health</code> endpoint exposes the model name and chain type for monitoring.
+                        FastAPI's auto-generated <code>/docs</code> interface provides a built-in test harness.
+                    </p>
+                </div>
+
+                <div class="card" style="margin-top:1rem;">
+                    <h3>Step 4 - Build and Serve the Frontend</h3>
+                    <p>
+                        The frontend is a single HTML file with embedded CSS and JavaScript, served directly
+                        by FastAPI via <code>FileResponse("frontend/index.html")</code>. It requires no build
+                        step, no npm, and no framework. JavaScript makes a standard <code>fetch()</code> call
+                        to <code>POST /analyse</code> and renders the JSON response into labelled output cards.
+                        Four pre-loaded example incidents - covering Web3, Stripe, REST rate limiting, and JWT
+                        authentication - allow the tool to be demonstrated instantly without needing real errors.
+                    </p>
+                </div>
+
+                <div class="card" style="margin-top:1rem;">
+                    <h3>Step 5 - Local Setup</h3>
+                    <ul class="bullet-list">
+                        <li>Create and activate a Python virtual environment: <code>python -m venv venv &amp;&amp; source venv/bin/activate</code></li>
+                        <li>Install dependencies: <code>pip install -r requirements.txt</code></li>
+                        <li>Copy the environment template and add your OpenAI key: <code>cp .env.example .env</code></li>
+                        <li>Start the server: <code>python main.py</code></li>
+                        <li>Open the app at <code>http://localhost:8000</code> - API docs available at <code>/docs</code></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Use Cases -->
+        <section class="section section-alt">
+            <div class="container">
+                <h2>Example Use Cases</h2>
+                <p class="section-intro">
+                    Three real-world style incidents that demonstrate the breadth of the tool - covering
+                    blockchain, payments, and REST API failure patterns.
+                </p>
+
+                <div class="card">
+                    <h3>Use Case 1 - Web3 / Smart Contract Revert (ERC-20 Allowance)</h3>
+                    <p>
+                        A user tries to spend USDC tokens via a DeFi protocol and the transaction fails
+                        on-chain. They raise a support ticket with only a transaction hash. The raw revert
+                        message is pasted into the tool.
+                    </p>
+
+                    <h3 style="margin-top:1.5rem;">Input - Raw Error</h3>
+                    <p style="font-family:'Courier New',monospace; font-size:0.8rem; background:#0f172a; color:#94a3b8; padding:1rem; border-radius:6px; line-height:1.75; white-space:pre-wrap; margin-top:0.5rem;">Transaction Hash: 0x7f3a9b2c1d4e5f6a7b8c9d0e1f2a3b4c
+Status: FAILED
+Error: execution reverted: ERC20: transfer amount exceeds allowance
+Contract: 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48 (USDC)
+Function: transferFrom(address from, address to, uint256 amount)
+Amount: 500000000 (500 USDC)
+Network: Ethereum Mainnet</p>
+
+                    <h3 style="margin-top:1.5rem;">Tool Output</h3>
+                    <ul class="bullet-list">
+                        <li><strong>Explanation:</strong> The transaction tried to move USDC tokens on behalf of the user, but the user had not pre-approved this contract to spend their tokens. No tokens moved and gas was consumed because the revert happened during execution.</li>
+                        <li><strong>Root Cause:</strong> Missing <code>approve()</code> call. The <code>transferFrom()</code> function requires the token owner to explicitly grant an allowance to the spender address before the transfer can proceed.</li>
+                        <li><strong>Suggested Fix:</strong> Call <code>approve(spenderAddress, amount)</code> on the USDC contract from the user's wallet, verify the allowance is sufficient using <code>allowance(owner, spender)</code>, then retry the transaction.</li>
+                        <li><strong>Severity:</strong> P4 - single-user impact, no platform issue. <strong>Confidence:</strong> HIGH - the revert string is unambiguous.</li>
+                    </ul>
+
+                    <p style="margin-top:1rem;">
+                        In a Trust Wallet or DeFi support context, this is one of the most common user-facing
+                        failures. Being able to translate a raw revert string into clear, step-by-step user
+                        guidance demonstrates both Web3 technical knowledge and support communication skills.
+                    </p>
+                </div>
+
+                <div class="card" style="margin-top:1rem;">
+                    <h3>Use Case 2 - Stripe Payments API / Card Declined</h3>
+                    <p>
+                        A merchant's checkout is failing for some customers. The developer pastes the raw
+                        Stripe error response into the tool, unsure whether the issue is in their integration
+                        or on the card side.
+                    </p>
+
+                    <h3 style="margin-top:1.5rem;">Input - Raw Error</h3>
+                    <p style="font-family:'Courier New',monospace; font-size:0.8rem; background:#0f172a; color:#94a3b8; padding:1rem; border-radius:6px; line-height:1.75; white-space:pre-wrap; margin-top:0.5rem;">{
+  "error": {
+    "code": "card_declined",
+    "decline_code": "insufficient_funds",
+    "message": "Your card has insufficient funds.",
+    "payment_intent": {
+      "id": "pi_3N9xKmP3eZvKYlo2",
+      "amount": 5000,
+      "currency": "usd",
+      "status": "requires_payment_method"
+    },
+    "type": "card_error"
+  }
+}</p>
+
+                    <h3 style="margin-top:1.5rem;">Tool Output</h3>
+                    <ul class="bullet-list">
+                        <li><strong>Explanation:</strong> The customer's card was declined by their bank due to insufficient funds. Stripe processed the request correctly - this is a card-side rejection, not an integration error.</li>
+                        <li><strong>Root Cause:</strong> <code>type: "card_error"</code> confirms the integration worked. The decline originated at the issuing bank. <code>decline_code: "insufficient_funds"</code> is unambiguous.</li>
+                        <li><strong>Suggested Fix:</strong> Prompt the customer to use a different payment method. Check the Stripe Dashboard for decline code patterns across transactions. Implement retry logic with a clear user-facing message that distinguishes card errors from integration errors.</li>
+                        <li><strong>Severity:</strong> P4 - affects individual transactions, not the overall system. <strong>Confidence:</strong> HIGH.</li>
+                    </ul>
+
+                    <p style="margin-top:1rem;">
+                        The key insight is knowing that <code>type: "card_error"</code> means the integration
+                        worked. A support engineer who makes this distinction immediately prevents unnecessary
+                        escalation to the development team.
+                    </p>
+                </div>
+
+                <div class="card" style="margin-top:1rem;">
+                    <h3>Use Case 3 - REST API Rate Limit / Production Degradation</h3>
+                    <p>
+                        An internal dashboard stops loading at 9am on a Monday. The on-call engineer checks
+                        the logs and sees a flood of 429 responses from a third-party data API. A representative
+                        log entry is pasted into the tool to begin triage.
+                    </p>
+
+                    <h3 style="margin-top:1.5rem;">Input - Raw Error</h3>
+                    <p style="font-family:'Courier New',monospace; font-size:0.8rem; background:#0f172a; color:#94a3b8; padding:1rem; border-radius:6px; line-height:1.75; white-space:pre-wrap; margin-top:0.5rem;">[ERROR] 2024-01-15 09:03:44 UTC
+GET https://api.dataservice.com/v2/analytics/report
+Status: 429 Too Many Requests
+Headers:
+  Retry-After: 60
+  X-RateLimit-Limit: 100
+  X-RateLimit-Remaining: 0
+Body: {
+  "error": "rate_limit_exceeded",
+  "message": "You have exceeded your 100 req/min limit."
+}
+Occurred: 47 times in last 60 seconds</p>
+
+                    <h3 style="margin-top:1.5rem;">Tool Output</h3>
+                    <ul class="bullet-list">
+                        <li><strong>Explanation:</strong> The application sent over 100 requests to the data API in under a minute, hitting the provider's rate cap. The service degraded as a result - requests are being rejected until the window resets.</li>
+                        <li><strong>Root Cause:</strong> No request throttling or caching in place. Likely a polling loop or N+1 query pattern firing on peak Monday morning load. The <code>X-RateLimit-Remaining: 0</code> header confirms the limit was fully exhausted.</li>
+                        <li><strong>Suggested Fix:</strong> Implement exponential backoff respecting the <code>Retry-After: 60</code> header. Add a caching layer to de-duplicate repeat calls within the rate window. Review polling interval and request batching strategy to stay within 100 req/min under peak load.</li>
+                        <li><strong>Severity:</strong> P2 - service degraded but not fully down. Dashboard users are impacted. Needs immediate mitigation. <strong>Confidence:</strong> HIGH.</li>
+                    </ul>
+
+                    <p style="margin-top:1rem;">
+                        Rate limit incidents are one of the most common real-world API failures. Understanding
+                        that the fix is architectural - caching and backoff - rather than simply retrying faster,
+                        is the mark of a senior support or platform engineer.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Takeaways -->
+        <section class="section">
+            <div class="container">
+                <h2>Key Takeaways</h2>
+                <div class="card">
+                    <p>
+                        The most valuable aspect of this project is not the AI integration - it is the
+                        understanding of what a good incident analysis looks like. The output schema
+                        (explanation → root cause → category → severity → fix → confidence) mirrors
+                        exactly how I structure real incident triage: start with the plain-English
+                        summary for stakeholders, identify the specific technical cause, assess blast
+                        radius, then give the team concrete next steps.
+                    </p>
+                    <p style="margin-top:1rem;">
+                        Building this required knowing what each error type actually means - not just that
+                        a 429 is a rate limit, but that the <code>Retry-After</code> header is the first
+                        thing to inspect, that the architectural fix is usually a cache rather than a slower
+                        retry, and that the 47 occurrences in 60 seconds is the signal pointing to a loop
+                        rather than organic traffic. The AI makes that knowledge accessible consistently and
+                        at speed. The engineering behind it makes it reliable.
+                    </p>
+                    <p style="margin-top:1rem;">
+                        One broader point: integrating a language model into a support workflow only works
+                        if the output is structured and typed - not free-form text. The <code>StructuredOutputParser</code>
+                        approach used here is the pattern that makes AI output safe to render in a UI, log
+                        to a database, or pipe into a downstream automation. That design decision is more
+                        important than the model choice.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        </main>
+
+        <!-- Contact -->
+        <section id="contact" class="section section-alt">
+            <div class="container two-column">
+                <div>
+                    <h2>Let's Talk</h2>
+                    <p class="section-intro">
+                        I'm open to roles in SaaS, fintech and crypto/Web3 support - particularly where reliability,
+                        observability, and customer impact are central.
+                    </p>
+                </div>
+                <div class="contact-block">
+                    <p><strong>Email:</strong> <a href="mailto:johnbeedles@gmail.com">johnbeedles@gmail.com</a></p>
+                    <p><strong>Location:</strong> Bournemouth, United Kingdom</p>
+                    <p><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/john-beedles-a428b3139" target="_blank">View Profile</a></p>
+                </div>
+            </div>
+        </section>
+
+        <footer class="site-footer">
+            <div class="container footer-container">
+                <p>© <span id="year"></span> John Beedles. All rights reserved.</p>
+            </div>
+        </footer>
+
+    </div>
+
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+
+</body>
+</html>

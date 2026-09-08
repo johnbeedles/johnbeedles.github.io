@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Case Study: Incident — Partial Payment Degradation | John Beedles</title>
+    <title>Case Study: Incident - Partial Payment Degradation | John Beedles</title>
 
     <!-- Modular CSS -->
     <link rel="stylesheet" href="core.css">
@@ -42,7 +42,7 @@
                     </h1>
     
                     <p class="hero-subtitle">
-                        End-to-end technical ownership of a partial service degradation affecting payment flows — from an 
+                        End-to-end technical ownership of a partial service degradation affecting payment flows - from an 
                         out-of-hours alert through identifying the failure point, advising Engineering on the remediation 
                         strategy, and driving post-incident improvements that reduced MTTR for this class of incident by 
                         approximately 40%.
@@ -71,7 +71,7 @@
                     <h2>Project Overview</h2>
                     <p class="section-intro">
                         A downstream address verification service began experiencing elevated latency, causing intermittent 
-                        timeouts in the core payment flow. I took full technical ownership of the investigation — pinpointing 
+                        timeouts in the core payment flow. I took full technical ownership of the investigation - pinpointing 
                         the exact failure point, initiating the P1 protocol with Incident Management, and advising Engineering 
                         on the manual failover and circuit breaker activation that restored service. I then led the technical 
                         narrative through the PIR and drove the lasting improvements to our resilience posture.
@@ -80,7 +80,7 @@
                     <h3>Incident Scope &amp; Impact</h3>
                     <ul class="bullet-list">
                         <li>~18% of payment transactions affected over a 68-minute window</li>
-                        <li>Partial degradation rather than full outage — harder to detect, higher reputational risk</li>
+                        <li>Partial degradation rather than full outage - harder to detect, higher reputational risk</li>
                         <li>Impact isolated to a specific downstream dependency, not the core payment engine</li>
                         <li>No data loss or financial discrepancy; all failed transactions were safely rolled back</li>
                     </ul>
@@ -90,7 +90,7 @@
                 <div class="card">
                     <h3>Skills Demonstrated</h3>
                     <ul class="bullet-list">
-                        <li>Technical SME — P1 bridge advisor</li>
+                        <li>Technical SME - P1 bridge advisor</li>
                         <li>Deep-system root cause analysis</li>
                         <li>IM framework coordination</li>
                         <li>Remediation strategy (failover &amp; circuit breaker)</li>
@@ -117,14 +117,14 @@
                 <h2>Incident Timeline</h2>
                 <div class="card">
                     <ul class="bullet-list">
-                        <li><strong>21:02</strong> — OpsGenie alert triggered for elevated error rate on the payment endpoint. Acknowledged within 90 seconds and began initial triage.</li>
-                        <li><strong>21:05</strong> — Initiated P1 protocol by contacting Incident Management (IM) with a preliminary impact assessment to open the bridge and trigger stakeholder communications.</li>
-                        <li><strong>21:12</strong> — Pinpointed the failure using Dynatrace service maps and Splunk log correlation: isolated the latency spike to the connection-handshake phase of the address verification service, confirming ~18% transaction failure rate across affected enterprise clients.</li>
-                        <li><strong>21:20</strong> — Technical briefing on the IM-led bridge: presented trace evidence to Engineering and advised on immediate manual failover to the legacy provider and circuit breaker activation to protect the payment engine.</li>
-                        <li><strong>21:35</strong> — Engineering implemented the recommended circuit breaker. Monitored real-time traffic in Splunk to confirm graceful fallback was absorbing the failed verification calls. IM updated stakeholders that mitigation was in progress.</li>
-                        <li><strong>21:40</strong> — Verified mitigation effective. Error rate trending back toward baseline. Continued monitoring with Dynatrace service map open.</li>
-                        <li><strong>22:10</strong> — Full recovery confirmed. Error rate returned to baseline. Notified IM to close the incident and issue final recovery communications.</li>
-                        <li><strong>Next Day</strong> — Prepared the technical timeline and root cause brief for the PIR. Circulated contributing factors and proposed action owners to attendees in advance of the session.</li>
+                        <li><strong>21:02</strong> - OpsGenie alert triggered for elevated error rate on the payment endpoint. Acknowledged within 90 seconds and began initial triage.</li>
+                        <li><strong>21:05</strong> - Initiated P1 protocol by contacting Incident Management (IM) with a preliminary impact assessment to open the bridge and trigger stakeholder communications.</li>
+                        <li><strong>21:12</strong> - Pinpointed the failure using Dynatrace service maps and Splunk log correlation: isolated the latency spike to the connection-handshake phase of the address verification service, confirming ~18% transaction failure rate across affected enterprise clients.</li>
+                        <li><strong>21:20</strong> - Technical briefing on the IM-led bridge: presented trace evidence to Engineering and advised on immediate manual failover to the legacy provider and circuit breaker activation to protect the payment engine.</li>
+                        <li><strong>21:35</strong> - Engineering implemented the recommended circuit breaker. Monitored real-time traffic in Splunk to confirm graceful fallback was absorbing the failed verification calls. IM updated stakeholders that mitigation was in progress.</li>
+                        <li><strong>21:40</strong> - Verified mitigation effective. Error rate trending back toward baseline. Continued monitoring with Dynatrace service map open.</li>
+                        <li><strong>22:10</strong> - Full recovery confirmed. Error rate returned to baseline. Notified IM to close the incident and issue final recovery communications.</li>
+                        <li><strong>Next Day</strong> - Prepared the technical timeline and root cause brief for the PIR. Circulated contributing factors and proposed action owners to attendees in advance of the session.</li>
                     </ul>
                 </div>
             </div>
@@ -135,8 +135,8 @@
             <div class="container">
                 <h2>Root Cause</h2>
                 <div class="card">
-                    <p>High latency in the downstream address verification service caused connection pool exhaustion and transaction timeouts in the payment flow. My investigation identified that the failure originated at the connection-handshake phase — the service was accepting connections but failing to complete them within the payment flow's timeout budget, causing upstream pool exhaustion without triggering a clean error state.</p>
-                    <p style="margin-top:1rem;">The dependency lacked adequate isolation — no circuit breaker, no timeout budget, and no fallback path — meaning latency in one non-critical service could directly degrade overall transaction success rate.</p>
+                    <p>High latency in the downstream address verification service caused connection pool exhaustion and transaction timeouts in the payment flow. My investigation identified that the failure originated at the connection-handshake phase - the service was accepting connections but failing to complete them within the payment flow's timeout budget, causing upstream pool exhaustion without triggering a clean error state.</p>
+                    <p style="margin-top:1rem;">The dependency lacked adequate isolation - no circuit breaker, no timeout budget, and no fallback path - meaning latency in one non-critical service could directly degrade overall transaction success rate.</p>
                     <p style="margin-top:1rem;">The issue was compounded by an alerting gap: existing monitors tracked overall error rate, but had no visibility into the latency profile of individual downstream dependencies. This delayed initial detection by an estimated 6–8 minutes.</p>
                 </div>
             </div>
@@ -147,11 +147,11 @@
             <div class="container">
                 <h2>Post-Incident Review</h2>
                 <div class="card">
-                    <p>While Incident Management chaired the session, I drove the technical narrative for the blameless PIR attended by Engineering, Product, and Client Management — walking the team through the logs and traces that isolated the fault and proposing the lasting technical remediations.</p>
+                    <p>While Incident Management chaired the session, I drove the technical narrative for the blameless PIR attended by Engineering, Product, and Client Management - walking the team through the logs and traces that isolated the fault and proposing the lasting technical remediations.</p>
                     <p style="margin-top:1rem;"><strong>Key PIR outputs driven by my analysis:</strong></p>
                     <ul class="bullet-list">
                         <li>Identified three contributing factors: missing circuit breaker, no per-dependency latency alerting, and absence of a fallback path for address verification.</li>
-                        <li>Challenged the team to revisit timeout budgets across all downstream dependencies — not just the one that failed.</li>
+                        <li>Challenged the team to revisit timeout budgets across all downstream dependencies - not just the one that failed.</li>
                         <li>Agreed a synthetic check cadence to proactively surface latency degradation before it affects live traffic.</li>
                         <li>Drafted the technical post-mortem for the engineering knowledge base and client-facing incident report.</li>
                     </ul>
@@ -165,9 +165,9 @@
                 <h2>Resolution &amp; Lasting Improvements</h2>
                 <div class="card">
                     <ul class="bullet-list">
-                        <li><strong>Immediate:</strong> Advised Engineering on circuit breaker activation and directed the manual failover during the incident window — preventing escalation to a full platform outage.</li>
+                        <li><strong>Immediate:</strong> Advised Engineering on circuit breaker activation and directed the manual failover during the incident window - preventing escalation to a full platform outage.</li>
                         <li><strong>Short-term:</strong> Collaborated with Engineering to implement retries with exponential backoff and graceful degradation for address verification failures.</li>
-                        <li><strong>Monitoring:</strong> Identified the missing per-dependency latency alerting and worked with Engineering to implement it — reducing detection time for this class of incident from ~8 minutes to under 2 minutes in subsequent testing.</li>
+                        <li><strong>Monitoring:</strong> Identified the missing per-dependency latency alerting and worked with Engineering to implement it - reducing detection time for this class of incident from ~8 minutes to under 2 minutes in subsequent testing.</li>
                         <li><strong>Synthetic checks:</strong> Deployed probes against the address verification service to catch degradation before live traffic is affected.</li>
                         <li><strong>Runbooks:</strong> Authored the downstream dependency failure runbook, including decision trees for when to recommend failover to Engineering and clear escalation paths.</li>
                         <li><strong>MTTR:</strong> The combined monitoring and runbook improvements reduced MTTR for this class of incident by approximately 40% in the 90 days following the PIR.</li>
@@ -183,7 +183,7 @@
                 <div class="card">
                     <p>
                         One of my priorities after the PIR was ensuring that the hard-won knowledge from this incident 
-                        didn't stay with me — it needed to be transferable to the whole team, including junior engineers 
+                        didn't stay with me - it needed to be transferable to the whole team, including junior engineers 
                         who weren't on the bridge. I used the post-incident period as a structured hands-on learning 
                         opportunity, working directly with two junior team members across two sessions.
                     </p>
@@ -191,37 +191,37 @@
                     <h3 style="margin-top:1.5rem;">Dynatrace: Building the New Monitoring Together</h3>
                     <p style="margin-top:0.75rem;">
                         Rather than building the new Dynatrace alerting and handing it over, I walked the team through 
-                        the setup process step by step — explaining the decisions behind each threshold, not just the 
+                        the setup process step by step - explaining the decisions behind each threshold, not just the 
                         mechanics of configuring them. We covered how to read a service map and identify latency propagation 
                         paths, how to set per-dependency alerting that fires on latency deviation before it cascades into 
                         errors, and how to validate alert thresholds against historical incident data rather than guessing. 
-                        By the end, they could explain why each monitor existed and how to adjust it — not just that it existed.
+                        By the end, they could explain why each monitor existed and how to adjust it - not just that it existed.
                     </p>
                     <p style="margin-top:0.75rem;">
-                        We also walked through the synthetic probes together — how to configure them, what a healthy vs 
+                        We also walked through the synthetic probes together - how to configure them, what a healthy vs 
                         degrading response looks like, and how to cross-reference synthetic results against live service 
                         data in the Data Explorer when something looks off.
                     </p>
 
                     <h3 style="margin-top:1.5rem;">Enriched Alert Emails: Building Investigations into the Alert Itself</h3>
                     <p style="margin-top:0.75rem;">
-                        A key improvement I pushed for — and mentored the team through implementing — was making the 
+                        A key improvement I pushed for - and mentored the team through implementing - was making the 
                         alert notifications themselves more useful. Previously, an alert email told you something was 
                         wrong and little else. We redesigned the alert content to include:
                     </p>
                     <ul class="bullet-list" style="margin-top:0.75rem;">
-                        <li>A concise step-by-step investigation guide embedded directly in the alert body — so the first responder has an immediate action list without needing to find a runbook under pressure.</li>
+                        <li>A concise step-by-step investigation guide embedded directly in the alert body - so the first responder has an immediate action list without needing to find a runbook under pressure.</li>
                         <li>A direct link to the previous incident ticket in ServiceNow, giving context on how a similar issue presented, what was tried, and what resolved it.</li>
                         <li>Deep-links into the relevant Dynatrace views: the service dependency map scoped to the affected path, the synthetic monitor results for the address verification service, and a pre-filtered Data Explorer view showing the key latency and error rate metrics side by side.</li>
                     </ul>
                     <p style="margin-top:0.75rem;">
-                        The goal was that someone picking up an alert at 2am — including a junior engineer on their 
-                        first on-call shift — would have everything they need to begin a structured investigation 
+                        The goal was that someone picking up an alert at 2am - including a junior engineer on their 
+                        first on-call shift - would have everything they need to begin a structured investigation 
                         within 60 seconds of opening the email, without needing to context-switch into multiple tools 
                         from a standing start.
                     </p>
                     <p style="margin-top:0.75rem;">
-                        I walked the team through why each link was chosen and what to look for in each view — turning 
+                        I walked the team through why each link was chosen and what to look for in each view - turning 
                         the alert setup session into a triage skills session at the same time. The aim was always for 
                         them to understand the reasoning, not just follow the steps.
                     </p>
@@ -235,14 +235,14 @@
                 <h2>Key Takeaways</h2>
                 <div class="card">
                     <p>
-                        Partial degradations are often more dangerous than full outages — they are harder to detect, 
+                        Partial degradations are often more dangerous than full outages - they are harder to detect, 
                         easier to dismiss, and more likely to erode client trust before anyone realises the true scope. 
                         Strong observability at the dependency level, not just the endpoint level, is essential to catching 
                         them early.
                     </p>
                     <p style="margin-top:1rem;">
                         One thing I would do differently: establish explicit timeout budgets for all downstream dependencies 
-                        at integration time, not after an incident. The absence of a circuit breaker was a known gap — the 
+                        at integration time, not after an incident. The absence of a circuit breaker was a known gap - the 
                         PIR surfaced that it had been deprioritised. That conversation should have happened earlier, and 
                         I would now advocate for resilience patterns as a first-class support concern during any new 
                         dependency onboarding.
@@ -259,7 +259,7 @@
                 <div>
                     <h2>Let's Talk</h2>
                     <p class="section-intro">
-                        I'm open to roles in SaaS, fintech and crypto/Web3 support — particularly where reliability,
+                        I'm open to roles in SaaS, fintech and crypto/Web3 support - particularly where reliability,
                         observability, and customer impact are central.
                     </p>
                 </div>
